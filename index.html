@@ -371,8 +371,45 @@
             font-size: 0.9em;
         }
     </style>
+
+<style id="computum-auth-style">
+#computumAuthOverlay{position:fixed;inset:0;z-index:999999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f4f6f8,#e8edf2);font-family:Arial,Helvetica,sans-serif}
+#computumAuthOverlay.hidden{display:none}
+.computum-auth-card{width:min(420px,calc(100% - 32px));background:#fff;border:1px solid #d9dee5;border-radius:16px;box-shadow:0 18px 55px rgba(0,0,0,.14);padding:30px}
+.computum-auth-brand{text-align:center;margin-bottom:24px}.computum-auth-brand h1{margin:0;color:#1f2937;font-size:30px}.computum-auth-brand p{margin:7px 0 0;color:#6b7280;font-size:14px}
+.computum-auth-field{margin-bottom:15px}.computum-auth-field label{display:block;margin-bottom:6px;font-size:13px;font-weight:600;color:#374151}.computum-auth-field input{box-sizing:border-box;width:100%;height:44px;padding:0 12px;border:1px solid #cfd5dc;border-radius:8px;font-size:15px;outline:none}.computum-auth-field input:focus{border-color:#6b7280;box-shadow:0 0 0 3px rgba(107,114,128,.12)}
+#computumLoginBtn{width:100%;height:44px;border:0;border-radius:8px;background:#1f2937;color:#fff;font-size:15px;font-weight:700;cursor:pointer}.computum-auth-actions{margin-top:12px;text-align:center}.computum-auth-actions button{border:0;background:none;color:#4b5563;cursor:pointer;text-decoration:underline;font-size:13px}
+#computumAuthError{display:none;margin:0 0 14px;padding:10px 12px;border-radius:8px;background:#fef2f2;color:#991b1b;font-size:13px;line-height:1.4}.computum-auth-loading{opacity:.7;pointer-events:none}
+#computumLogoutBtn{position:fixed;right:16px;top:16px;z-index:99998;border:1px solid #cfd5dc;background:#fff;color:#374151;border-radius:7px;padding:7px 11px;font-size:12px;cursor:pointer;display:none;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+@media(max-width:600px){.computum-auth-card{padding:24px}.computum-auth-brand h1{font-size:26px}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+
+<div id="computumAuthOverlay">
+  <div class="computum-auth-card">
+    <div class="computum-auth-brand">
+      <h1>Computum</h1>
+      <p>Acesso ao Cálculo de Diferenças</p>
+    </div>
+    <div id="computumAuthError"></div>
+    <form id="computumLoginForm" autocomplete="on">
+      <div class="computum-auth-field">
+        <label for="computumEmail">E-mail</label>
+        <input id="computumEmail" type="email" autocomplete="username" required>
+      </div>
+      <div class="computum-auth-field">
+        <label for="computumPassword">Senha</label>
+        <input id="computumPassword" type="password" autocomplete="current-password" required>
+      </div>
+      <button id="computumLoginBtn" type="submit">Entrar</button>
+      <div class="computum-auth-actions"><button id="computumForgotBtn" type="button">Esqueci minha senha</button></div>
+    </form>
+  </div>
+</div>
+<button id="computumLogoutBtn" type="button">Sair</button>
+
 
 <div class="container no-print" id="appContainer">
     <div class="top-bar">
@@ -2763,6 +2800,99 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
         atualizarTituloOutrosCard();
         atualizarSaldoGuia5Exibido();
     }
+</script>
+
+<script id="computum-auth-script">
+(function(){
+  'use strict';
+
+  // =========================================================
+  // COMPUTUM — AUTENTICAÇÃO SUPABASE
+  // Apenas controle de acesso. Não altera o motor de cálculo.
+  // Substitua SOMENTE os dois valores abaixo pelos dados do
+  // projeto Supabase COMPUTUM (Project URL e Publishable/Anon Key).
+  // =========================================================
+  const COMPUTUM_SUPABASE_URL = 'https://tdcexflyomkpygtxynjb.supabase.co';
+  const COMPUTUM_SUPABASE_KEY = 'sb_publishable_dqM-ROG8Pc7OwW6F-Swcpw_-DMNn19R';
+
+  const overlay = document.getElementById('computumAuthOverlay');
+  const form = document.getElementById('computumLoginForm');
+  const email = document.getElementById('computumEmail');
+  const password = document.getElementById('computumPassword');
+  const errorBox = document.getElementById('computumAuthError');
+  const loginBtn = document.getElementById('computumLoginBtn');
+  const forgotBtn = document.getElementById('computumForgotBtn');
+  const logoutBtn = document.getElementById('computumLogoutBtn');
+
+  if(!overlay || !form || !window.supabase) return;
+
+  const credentialsConfigured = !COMPUTUM_SUPABASE_URL.includes('COLE_AQUI_') && !COMPUTUM_SUPABASE_KEY.includes('COLE_AQUI_');
+  const client = credentialsConfigured ? window.supabase.createClient(COMPUTUM_SUPABASE_URL, COMPUTUM_SUPABASE_KEY) : null;
+
+  function showError(message){ errorBox.textContent = message; errorBox.style.display='block'; }
+  function clearError(){ errorBox.textContent=''; errorBox.style.display='none'; }
+  function setLoading(on){ form.classList.toggle('computum-auth-loading',on); loginBtn.textContent=on?'Entrando...':'Entrar'; }
+  function showApp(){ overlay.classList.add('hidden'); logoutBtn.style.display='block'; }
+  function showLogin(){ overlay.classList.remove('hidden'); logoutBtn.style.display='none'; }
+
+  async function checkSession(){
+    if(!credentialsConfigured){
+      showError('A autenticação ainda não foi configurada. Informe a URL e a chave publicável do projeto Supabase Computum no próprio index.html.');
+      return;
+    }
+    try{
+      const {data,error}=await client.auth.getSession();
+      if(error) throw error;
+      if(data && data.session) showApp(); else showLogin();
+    }catch(err){
+      console.error('Computum Auth:',err);
+      showError('Não foi possível verificar a sessão. Verifique sua conexão e tente novamente.');
+    }
+  }
+
+  form.addEventListener('submit', async function(ev){
+    ev.preventDefault(); clearError();
+    if(!client){ showError('Configure primeiro as credenciais do Supabase Computum neste index.html.'); return; }
+    setLoading(true);
+    try{
+      const {error}=await client.auth.signInWithPassword({email:email.value.trim(),password:password.value});
+      if(error) throw error;
+      password.value=''; showApp();
+    }catch(err){
+      console.error('Computum Login:',err);
+      const msg=String(err && err.message || '').toLowerCase();
+      if(msg.includes('invalid login credentials')) showError('E-mail ou senha inválidos.');
+      else if(msg.includes('email not confirmed')) showError('O e-mail deste usuário ainda não foi confirmado.');
+      else if(msg.includes('too many requests')) showError('Muitas tentativas. Aguarde alguns minutos e tente novamente.');
+      else showError(err && err.message ? err.message : 'Não foi possível realizar o login.');
+    }finally{ setLoading(false); }
+  });
+
+  forgotBtn.addEventListener('click', async function(){
+    clearError();
+    if(!client){ showError('Configure primeiro as credenciais do Supabase Computum neste index.html.'); return; }
+    const addr=email.value.trim();
+    if(!addr){ showError('Informe seu e-mail para solicitar a recuperação da senha.'); email.focus(); return; }
+    try{
+      const {error}=await client.auth.resetPasswordForEmail(addr,{redirectTo:window.location.origin + window.location.pathname});
+      if(error) throw error;
+      showError('Se o e-mail estiver cadastrado, o link de recuperação será enviado.');
+      errorBox.style.background='#f0fdf4'; errorBox.style.color='#166534';
+    }catch(err){ showError(err && err.message ? err.message : 'Não foi possível solicitar a recuperação da senha.'); }
+  });
+
+  logoutBtn.addEventListener('click', async function(){
+    if(!client) return;
+    try{ await client.auth.signOut(); }finally{ showLogin(); clearError(); }
+  });
+
+  client && client.auth.onAuthStateChange(function(event,session){
+    if(event==='SIGNED_IN' && session) showApp();
+    if(event==='SIGNED_OUT') showLogin();
+  });
+
+  checkSession();
+})();
 </script>
 </body>
 </html>
