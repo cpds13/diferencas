@@ -1,0 +1,2582 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Judicial de Cálculos</title>
+    <style>
+        /* --- DESIGN SYSTEM (PRESERVADO) --- */
+        :root {
+            --primary: #BE5014;
+            --primary-dark: #692A08;
+            --salmon-light: #FFC599;
+            --salmon-soft: #FFECD9;
+            --text-main: #2F3640;
+            --text-secondary: #7F8C8D;
+            --text-muted: #95A5A6;
+            --bg-main: #F8F9FA;
+            --bg-container: #FFFFFF;
+            --border-main: #DCDDE1;
+            --border-accent: #DCA377;
+            --info: #2980B9;
+            --danger: #E74C3C;
+            --success: #27AE60;
+            --highlight-yellow: #FFF3CD;
+            --highlight-blue: #D1ECF1;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            padding: 30px 20px;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: auto;
+            background: var(--bg-container);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        /* --- TIPOGRAFIA E HIERARQUIA --- */
+        h1 { color: var(--primary-dark); border-left: 6px solid var(--primary); padding-left: 15px; margin-top: 0; font-size: 1.8em; }
+        h2 { color: var(--primary); font-size: 1.3em; border-bottom: 2px solid var(--salmon-soft); padding-bottom: 8px; margin-top: 30px; }
+        h3 { color: var(--primary-dark); font-size: 1.1em; }
+
+        /* --- LAYOUT E FORMS --- */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 15px; }
+        .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; margin-bottom: 15px; }
+        
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-weight: 600; margin-bottom: 6px; font-size: 0.9em; color: var(--text-secondary); }
+        
+        input, select, textarea {
+            padding: 10px; border: 1px solid var(--border-main); border-radius: 4px;
+            font-size: 1em; background-color: var(--bg-container); color: var(--text-main);
+            transition: border-color 0.2s; font-family: inherit;
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); }
+
+        .editor-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: center;
+            background: var(--bg-main);
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid var(--border-main);
+        }
+        .editor-toolbar button {
+            padding: 4px 10px;
+            border: 1px solid var(--border-main);
+            background: var(--bg-container);
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        .editor-toolbar button.active {
+            background: var(--salmon-light);
+            border-color: var(--primary);
+        }
+        .editor-toolbar select, .editor-toolbar input[type="color"] {
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-main);
+            height: 30px;
+        }
+        .editor-toolbar input[type="color"] {
+            width: 40px;
+            padding: 2px;
+            cursor: pointer;
+        }
+
+        /* --- BOTÕES --- */
+        .top-bar { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+        .btn {
+            padding: 8px 16px; border: none; border-radius: 4px; font-weight: 600;
+            cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-flex;
+            align-items: center; justify-content: center; font-size: 0.9em;
+        }
+        .btn-primary { background-color: var(--primary); color: white; }
+        .btn-primary:hover { background-color: var(--primary-dark); }
+        .btn-outline { background-color: transparent; border: 1px solid var(--border-main); color: var(--text-main); }
+        .btn-outline:hover, .btn-outline.active { border-color: var(--primary); color: var(--primary); }
+        .btn-link { background-color: var(--bg-main); color: var(--info); border: 1px solid var(--info); }
+        .btn-danger { color: var(--danger); border: 1px solid var(--danger); background: transparent; }
+        .btn-danger:hover { background: var(--danger); color: white; }
+        .btn-success { background-color: var(--success); color: white; border: 1px solid var(--success); }
+
+        /* --- ABAS --- */
+        .tabs { display: flex; gap: 5px; border-bottom: 2px solid var(--salmon-light); margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-btn {
+            background: transparent; border: none; padding: 12px 20px; font-size: 1em;
+            font-weight: bold; color: var(--text-secondary); cursor: pointer;
+            border-radius: 6px 6px 0 0; transition: 0.2s;
+        }
+        .tab-btn.active { background: var(--salmon-light); color: var(--primary-dark); }
+        .tab-content { display: none; animation: fadeIn 0.2s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- TABELAS UI --- */
+        .table-responsive { overflow-x: auto; margin-top: 15px; border: 1px solid var(--border-main); border-radius: 4px;}
+        table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+        th { background-color: var(--salmon-light); color: var(--primary-dark); padding: 12px 8px; border: 1px solid var(--border-accent); font-weight: 700; text-align: right;}
+        th.center, td.center { text-align: center; }
+        td { padding: 8px; border: 1px solid var(--border-main); text-align: right; vertical-align: middle; }
+        tr:nth-child(even) { background-color: var(--bg-main); }
+        tr:hover { background-color: rgba(0,0,0,0.02); }
+        
+        .alert-text { color: var(--danger) !important; font-weight: bold; }
+        
+        .input-tbl { 
+            width: 100px; padding: 6px; text-align: right; 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: 0.9em; font-weight: 400; color: var(--text-main);
+            border: 1px solid transparent; background: transparent; border-bottom: 1px dashed var(--border-accent); 
+        }
+        .input-tbl:focus { background: var(--bg-container); border: 1px solid var(--primary); }
+        .input-tbl[readonly] { border-bottom: none; cursor: default; }
+        .input-tbl[readonly]:focus { outline: none; background: transparent; border: 1px solid transparent; }
+        
+        .input-frac { width: 60px; padding: 6px; text-align: center; font-family: inherit; font-size: inherit; font-weight: inherit; color: inherit; }
+        .hidden { display: none !important; }
+
+        /* --- CARDS E RESUMOS --- */
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+        .card { background: var(--bg-container); border: 1px solid var(--border-accent); border-radius: 6px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        .card-header { font-weight: 700; color: var(--primary-dark); border-bottom: 1px solid var(--salmon-light); padding-bottom: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; }
+        .card-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.95em; color: var(--text-main); }
+        .card-row.sub { padding-left: 15px; color: var(--text-secondary); }
+        .card-total { font-weight: bold; font-size: 1.1em; color: var(--primary-dark); border-top: 1px solid var(--border-main); padding-top: 8px; margin-top: 5px; }
+
+        /* --- CHECKBOXES CUSTOMIZADOS --- */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: var(--bg-main);
+            border: 1px solid var(--border-main);
+            border-radius: 4px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .checkbox-group:hover {
+            border-color: var(--primary);
+            background: var(--salmon-soft);
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+        .checkbox-group label {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-main);
+            cursor: pointer;
+            font-size: 0.95em;
+        }
+
+        /* --- SELETORES DE CONTEÚDO PDF --- */
+        .pdf-checkboxes {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            background: var(--bg-main);
+            padding: 8px 15px;
+            border-radius: 4px;
+            border: 1px solid var(--border-main);
+        }
+        .pdf-checkboxes label {
+            font-weight: 500;
+            font-size: 0.85em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .pdf-checkboxes input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* --- MEMÓRIA DE CÁLCULO --- */
+        .memoria-calculo {
+            background: var(--bg-main);
+            border: 1px solid var(--border-accent);
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .memoria-calculo h4 {
+            color: var(--primary-dark);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            border-bottom: 1px solid var(--salmon-light);
+            padding-bottom: 8px;
+        }
+        .memoria-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 0.95em;
+            border-bottom: 1px dotted var(--border-main);
+        }
+        .memoria-row:last-child {
+            border-bottom: none;
+        }
+        .memoria-row span:first-child {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .memoria-row span:last-child {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+        .memoria-row.total {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--primary-dark);
+            border-top: 2px solid var(--primary);
+            margin-top: 10px;
+            padding-top: 10px;
+        }
+
+        /* --- MODO IMPRESSÃO DEDICADO --- */
+        #printArea { display: none; }
+        
+        @media print {
+            body { background: white; padding: 0; margin: 0; font-size: 10pt; color: #000; }
+            .container { display: none !important; }
+            
+            #printArea { display: block !important; width: 100%; max-width: 100%; }
+            @page { size: landscape; margin: 15mm; }
+            
+            .print-header-box { border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 20px; }
+            
+            .print-header-box h1 { 
+                margin: 0 0 15px 0; 
+                font-size: 18pt; 
+                color: var(--primary-dark); 
+                border-left: 6px solid var(--primary); 
+                padding-left: 12px;
+                font-weight: bold;
+            }
+            
+            .print-params { font-size: 11pt; line-height: 1.6; margin-bottom: 10px; }
+            .print-params strong { color: var(--primary-dark); }
+            
+            .print-texto-livre { margin: 15px 0; padding: 10px; border: 1px solid #ddd; background: #f9f9f9; }
+            .print-texto-livre p { margin: 5px 0; }
+            .print-texto-livre .page-break { page-break-after: always; border: none; margin: 0; padding: 0; height: 0; }
+            
+            #printArea table { width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 20px; page-break-inside: auto; }
+            #printArea tr { page-break-inside: avoid; page-break-after: auto; }
+            #printArea th { background-color: var(--salmon-soft) !important; color: black; -webkit-print-color-adjust: exact; padding: 8px; border: 1px solid #ccc; text-align: right; font-size: 10pt; }
+            #printArea th.center { text-align: center; }
+            #printArea td { padding: 6px; border: 1px solid #ccc; text-align: right; font-size: 10pt; }
+            #printArea td.center { text-align: center; }
+            
+            .print-summary-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; page-break-inside: avoid; }
+            .print-card { border: 1px solid #ccc; padding: 10px; border-radius: 4px; font-size: 10pt; }
+            .print-card-header { font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 5px; }
+            .print-total-geral { margin-top: 15px; font-size: 14pt; font-weight: bold; border: 2px solid var(--primary); padding: 10px; text-align: right; }
+            
+            .print-totais-line {
+                display: flex;
+                gap: 6px;
+                background: var(--salmon-soft);
+                border: 1px solid var(--border-accent);
+                border-radius: 4px;
+                padding: 6px;
+                margin-top: 10px;
+                page-break-inside: avoid;
+                -webkit-print-color-adjust: exact;
+            }
+            .print-totais-line .total-item {
+                flex: 1;
+                text-align: right;
+                padding: 4px 8px;
+                font-size: 9pt;
+                border-right: 1px solid var(--border-accent);
+            }
+            .print-totais-line .total-item:last-child {
+                border-right: none;
+            }
+            .print-totais-line .total-item span {
+                display: block;
+                font-size: 8pt;
+                color: var(--text-secondary);
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.3px;
+                margin-bottom: 2px;
+            }
+            .print-totais-line .total-item strong {
+                display: block;
+                color: var(--primary-dark);
+                font-size: 11pt;
+                font-weight: 700;
+            }
+            .print-totais-line .total-destaque {
+                flex: 1.6;
+                background: var(--primary); 
+                color: white;
+                border-radius: 3px;
+                padding: 6px 12px;
+                border-right: none;
+            }
+            .print-totais-line .total-destaque span {
+                color: var(--salmon-soft);
+                font-size: 8.5pt;
+                font-weight: 700;
+            }
+            .print-totais-line .total-destaque strong {
+                color: white;
+                font-size: 14pt;
+                font-weight: 800;
+                margin-top: 2px;
+            }
+            
+            .print-footer {
+                margin-top: 40px;
+                text-align: right;
+                font-size: 9pt;
+                color: #555;
+                border-top: 1px solid #ddd;
+                padding-top: 15px;
+            }
+        }
+
+        #infoMajoracao {
+            white-space: pre-wrap;
+        }
+        #sucumbenciaDetalhesExtra .card-row.sub {
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container no-print" id="appContainer">
+    <div class="top-bar">
+        <a href="https://sicom.cjf.jus.br/tabelaCorMor.php" target="_blank" class="btn btn-link">🔗 SICOM CJF</a>
+        <a href="https://carlospatrickds.github.io/extrator_siape//" target="_blank" class="btn btn-link">🔗 Extrator SIAPE</a>
+        <a href="https://carlospatrickds.github.io/juntapdf/" target="_blank" class="btn btn-link">🔗 Junta PDF</a>
+        
+        <div style="flex-grow: 1;"></div>
+        
+        <button class="btn btn-outline" onclick="toggleNotas()">📝 Notas Internas</button>
+        <button class="btn btn-danger" onclick="novoCalculo()">🧹 Novo Cálculo</button>
+        <button class="btn btn-outline" onclick="document.getElementById('fileInput').click()">📂 Carregar JSON</button>
+        <input type="file" id="fileInput" class="hidden" accept=".json" onchange="carregarJSON(this)">
+        <button class="btn btn-primary" onclick="salvarJSON()">💾 Salvar Projeto</button>
+        
+        <div class="pdf-checkboxes">
+            <label><input type="checkbox" id="incluirPrincipal" checked> Cálculo Principal</label>
+            <label><input type="checkbox" id="incluirHonorarios" checked> Honorários (Valor da Causa)</label>
+            <label><input type="checkbox" id="incluirOutros" checked> Outros Lançamentos</label>
+        </div>
+        
+        <button class="btn btn-primary" onclick="prepararEImprimir()">🖨️ Gerar PDF</button>
+    </div>
+
+    <div id="notasContainer" class="hidden" style="margin-bottom: 20px;">
+        <textarea id="notasInternas" rows="4" placeholder="Área de notas e lembretes internos. Salvo no projeto, não vai para o PDF." style="width: 100%; border: 1px dashed var(--info); background: #f0f8ff;"></textarea>
+    </div>
+
+    <h1>Relatório de Cálculo Judicial</h1>
+    <div class="grid-2">
+        <div class="form-group"><label>Processo nº</label><input type="text" id="procNumero" placeholder="0000000-00.0000.0.00.0000"></div>
+        <div class="form-group"><label>Assunto</label><input type="text" id="procAssunto"></div>
+        <div class="form-group"><label>Parte Autora</label><input type="text" id="procAutor"></div>
+        <div class="form-group"><label>Réu</label><input type="text" id="procReu"></div>
+    </div>
+
+    <div style="margin: 10px 0 20px 0; background: var(--salmon-soft); padding: 10px 15px; border-radius: 4px; border: 1px solid var(--border-accent);">
+        <label style="font-weight: 600; display: flex; align-items: center; gap: 10px;">
+            <input type="checkbox" id="incluirOutrosNoPrincipal" checked onchange="atualizarInclusaoOutros()"> 
+            Incluir valores da aba "5. outros lançamentos" no cálculo principal (aba 3)
+        </label>
+        <small style="color: var(--text-muted);">Desmarque para que os outros valores não interfiram no total da condenação.</small>
+    </div>
+
+    <div class="tabs" style="margin-top: 30px;">
+        <button class="tab-btn active" onclick="openTab('tab1', this)">1. Dados Básicos</button>
+        <button class="tab-btn" onclick="openTab('tab2', this)">2. Lançamentos</button>
+        <button class="tab-btn" onclick="openTab('tab3', this)">3. Correção e Relatório</button>
+        <button class="tab-btn" onclick="openTab('tab4', this)">4. Honorários sobre Valor da Causa</button>
+        <button class="tab-btn" onclick="openTab('tab5', this)">5. Outros Lançamentos</button>
+        <button class="tab-btn" onclick="openTab('tab6', this)">6. Informação Textual</button>
+    </div>
+
+    <div id="tab1" class="tab-content active">
+        <h2>Parâmetros e Datas</h2>
+        <div class="grid-3">
+            <div class="form-group"><label>Data Ajuizamento (dd/mm/aaaa)</label><input type="date" id="dataAjuizamento" onchange="calcPrescricao(); syncAjuizamento();"></div>
+            <div class="form-group"><label>Data Citação (mm/aaaa)</label><input type="text" id="dataCitacao" placeholder="MM/AAAA" oninput="mascaraMesAno(this)" onblur="formataMesAno(this)"></div>
+            <div class="form-group"><label>Data Atualização (mm/aaaa)</label><input type="text" id="dataAtualizacao" placeholder="MM/AAAA" oninput="mascaraMesAno(this)" onblur="formataMesAno(this)"></div>
+        </div>
+
+        <div class="grid-3" style="background: var(--bg-main); padding: 15px; border-radius: 6px; border: 1px solid var(--border-main);">
+            <div class="form-group">
+                <label>Aplicar Prescrição?</label>
+                <select id="aplicaPrescricao" onchange="togglePrescricao()">
+                    <option value="S">Sim</option>
+                    <option value="N">Não</option>
+                </select>
+            </div>
+            <div class="form-group" id="boxAnosPresc"><label>Anos a retroagir</label><input type="text" inputmode="numeric" id="anosPresc" value="5" onchange="calcPrescricao()" oninput="mascaraInteiro(this)"></div>
+            <div class="form-group" id="boxDataPresc"><label>Início das Diferenças (dd/mm/aaaa)</label><input type="date" id="dataInicioDif"></div>
+        </div>
+
+        <h2>Honorários</h2>
+        <div style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+            <div class="checkbox-group">
+                <input type="checkbox" id="chkHonContratuais" onchange="toggleHonContratuais()">
+                <label for="chkHonContratuais">Incluir Honorários Contratuais</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="chkHonSucumbenciais" onchange="toggleHonSucumbenciais()">
+                <label for="chkHonSucumbenciais">Incluir Honorários Sucumbenciais</label>
+            </div>
+        </div>
+
+        <div class="grid-4">
+            <div class="form-group"><label>Hon. Contratuais (%)</label><input type="text" inputmode="decimal" id="honContratuais" value="20,00" oninput="mascaraMoeda(this)" onblur="calcularSeNecessario()"></div>
+            <div class="form-group"><label>Hon. Sucumbência (%)</label><input type="text" inputmode="decimal" id="honSucumbencia" value="0,00" oninput="mascaraMoeda(this)" onchange="toggleMajoração()"></div>
+            <div class="form-group hidden" id="boxIdSucumb"><label>ID Doc. Sucumbência</label><input type="text" id="idDocSucumb"></div>
+        </div>
+
+        <div class="form-group" style="margin-top: 10px; max-width: 300px;">
+            <label>Data Limite para Base da Sucumbência (Súmula 111 STJ)</label>
+            <input type="date" id="dataLimiteSucumbencia" onchange="calcularSeNecessario()">
+            <small style="color: var(--text-muted); font-size: 0.8em; margin-top: 4px;">Se preenchido, a sucumbência considerará apenas competências até esta data.</small>
+        </div>
+
+        <div id="boxGuia5Sucumb" class="hidden" style="margin-top: 10px; padding: 10px; background: var(--salmon-soft); border-radius: 4px; border: 1px solid var(--border-accent);">
+            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <div class="checkbox-group" style="margin-bottom: 0; background: transparent; border: none; padding: 0;">
+                    <input type="checkbox" id="chkSucumbenciaIncluiGuia5" onchange="calcularSeNecessario()">
+                    <label for="chkSucumbenciaIncluiGuia5">Incluir valor total da Guia 5 na base dos Honorários Sucumbenciais</label>
+                </div>
+                <span style="font-size: 0.85em; color: var(--text-secondary);">
+                    Saldo atual da Guia 5: <strong id="saldoGuia5Exibido">R$ 0,00</strong>
+                </span>
+            </div>
+            <small style="color: var(--text-muted); font-size: 0.75em;">O valor considerado é o saldo líquido (Somar - Abater) dos lançamentos da aba 5, utilizando o Valor Final (inclui juros).</small>
+        </div>
+
+        <div id="boxMajoracao" class="hidden" style="background: var(--salmon-soft); padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+            <div class="grid-3">
+                <div class="form-group"><label>Majoração (%)</label><input type="text" inputmode="decimal" id="honMajoracao" value="0,00" oninput="mascaraMoeda(this)" onchange="toggleMajoracaoDetalhes()"></div>
+                <div class="form-group hidden majoracao-det"><label>ID Doc. Majoração</label><input type="text" id="idDocMajoracao"></div>
+                <div class="form-group hidden majoracao-det">
+                    <label>Forma de Cálculo</label>
+                    <select id="tipoMajoracao" onchange="calcularSeNecessario()">
+                        <option value="aditiva">Aditiva (Suc. + Maj.)</option>
+                        <option value="multiplicativa">Multiplicativa (Suc. + Maj% sobre Suc.)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 15px;">
+            <label>Observações do Cálculo</label>
+            <textarea id="obsCalculo" rows="3" placeholder="Critérios adotados, exclusões, termos de acordo..."></textarea>
+        </div>
+    </div>
+
+    <div id="tab2" class="tab-content">
+        <h2>Lançamento de Valores</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9em;">Cole os dados tabulados (Competência | Valor Recebido | Valor Devido) ou gere competências automaticamente.</p>
+        
+        <div class="grid-2">
+            <div class="form-group">
+                <textarea id="areaColagem" rows="4" placeholder="Cole os dados aqui..."></textarea>
+                <div style="margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="processarColagem()">📥 Processar Colagem</button>
+                    <button class="btn btn-outline" onclick="gerarCompetenciasAuto()">⚙️ Gerar Automático</button>
+                    <button class="btn btn-outline" id="btnEditMode" onclick="toggleEditMode()">✏️ Editar Valores</button>
+                    <button class="btn btn-danger btn-outline" onclick="limparLancamentos()">🧹 Limpar Valores</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table id="tblLancamento">
+                <thead>
+                    <tr>
+                        <th class="center" style="width: 50px;">Ativa</th>
+                        <th class="center">Competência</th>
+                        <th>Valor Devido (R$)</th>
+                        <th>Valor Recebido (R$)</th>
+                        <th>Diferença Apurada (R$)</th>
+                        <th class="center" style="width: 50px;">Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="bodyLancamento"></tbody>
+            </table>
+        </div>
+        <div style="margin-top: 10px;">
+            <button class="btn btn-outline" onclick="addLinhaManual()">➕ Adicionar Linha</button>
+        </div>
+    </div>
+
+    <div id="tab3" class="tab-content">
+        <h2>Correção e Atualização Monetária</h2>
+        
+        <div class="grid-2" style="background: var(--bg-main); padding: 15px; border-radius: 6px; border: 1px solid var(--border-main);">
+            <div class="form-group">
+                <label>Carregar Índices via Web</label>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-outline" onclick="carregarIndicesWeb('EC113', this, 'tab3')">⬇️ EC 113/2021</button>
+                    <button class="btn btn-outline" onclick="carregarIndicesWeb('EC136', this, 'tab3')">⬇️ EC 136/2025</button>
+                    <button class="btn btn-outline" onclick="carregarIndicesWeb('ENCOGE', this, 'tab3')">⬇️ ENCOGE</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Aplicação de Fração/Acordo sobre Diferença</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <select id="aplicaFracao" onchange="toggleFracao()">
+                        <option value="N">Não (100%)</option>
+                        <option value="S">Sim (Aplicar %)</option>
+                    </select>
+                    <input type="text" inputmode="decimal" id="fracaoGlobal" value="100,00" class="hidden input-frac" oninput="mascaraMoeda(this)" onblur="aplicarFracaoGlobal()" title="Percentual Global">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 15px;">
+            <label>Índices em Memória (Cole manualmente se a importação web falhar)</label>
+            <textarea id="rawIndices" rows="4" placeholder="Mês/Ano \t Correção Monetária \t % Juros \t % SELIC" onblur="processarTxtIndices(this.value); calcularAtualizacao()"></textarea>
+        </div>
+
+        <div style="margin-top: 20px; text-align: right;">
+            <button class="btn btn-primary" style="padding: 12px 24px; font-size: 1.1em;" onclick="calcularAtualizacao()">🧮 Calcular e Atualizar Relatório</button>
+        </div>
+
+        <div id="resultadoTela" class="hidden" style="margin-top: 30px;">
+            <h3>Demonstrativo de Atualização</h3>
+            <div class="table-responsive">
+                <table id="tblCorrecao">
+                    <thead>
+                        <tr>
+                            <th class="center">Mês/Ano</th>
+                            <th>Devido</th>
+                            <th>Recebido</th>
+                            <th>Diferença</th>
+                            <th class="col-frac center hidden">% Fração</th>
+                            <th class="col-frac hidden">Dif. Ajustada</th>
+                            <th>Fator Correção</th>
+                            <th>Val. Atualizado</th>
+                            <th>% Juros</th>
+                            <th>R$ Juros</th>
+                            <th>% SELIC</th>
+                            <th>R$ SELIC</th>
+                            <th>Total (R$)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyCorrecao"></tbody>
+                    <tfoot id="footCorrecao" style="font-weight: bold; background: var(--salmon-soft);"></tfoot>
+                </table>
+            </div>
+
+            <h3>Resumo Financeiro Final</h3>
+            <div class="summary-grid">
+                <div class="card">
+                    <div class="card-header"><span>1. Valor da Parte Autora</span><span id="resAutPerc"></span></div>
+                    <div class="card-row sub"><span>├ Principal Corrigido</span> <span id="resAutPrin">R$ 0,00</span></div>
+                    <div class="card-row sub"><span>├ Juros de Mora</span> <span id="resAutJur">R$ 0,00</span></div>
+                    <div class="card-row sub"><span>└ SELIC</span> <span id="resAutSel">R$ 0,00</span></div>
+                    <div class="card-row card-total"><span>= Total Autor</span> <span id="resAutTot">R$ 0,00</span></div>
+                </div>
+
+                <div class="card hidden" id="cardContratuais">
+                    <div class="card-header"><span>2. Honorários Contratuais</span><span id="resContPerc"></span></div>
+                    <div class="card-row sub"><span>├ Principal Corrigido</span> <span id="resContPrin">R$ 0,00</span></div>
+                    <div class="card-row sub"><span>├ Juros de Mora</span> <span id="resContJur">R$ 0,00</span></div>
+                    <div class="card-row sub"><span>└ SELIC</span> <span id="resContSel">R$ 0,00</span></div>
+                    <div class="card-row card-total"><span>= Total Contrato</span> <span id="resContTot">R$ 0,00</span></div>
+                </div>
+
+                <div class="card hidden" id="cardSucumbencia">
+                    <div class="card-header"><span>3. Honorários Sucumbência</span><span id="resSucPerc"></span></div>
+                    <div id="infoMajoracao" style="font-size: 0.85em; color: var(--info); margin-bottom: 10px;"></div>
+                    <div class="card-row sub"><span>├ Principal Corrigido</span> <span id="resSucPrin">R$ 0,00</span></div>
+                    <div class="card-row sub"><span>├ Juros de Mora</span> <span id="resSucJur">R$ 0,00</span></div>
+                    <div class="card-row sub"><span>└ SELIC</span> <span id="resSucSel">R$ 0,00</span></div>
+                    <div id="sucumbenciaDetalhesExtra"></div>
+                    <div class="card-row card-total"><span>= Total Sucumbência</span> <span id="resSucTot">R$ 0,00</span></div>
+                </div>
+
+                <div class="card hidden" id="cardOutrosValores">
+                    <div class="card-header"><span id="outrosCardTitulo">4. Outros Valores</span></div>
+                    <div class="card-row sub"><span>├ Valores a Somar</span> <span id="resOutrosSomar" style="color: var(--success);">R$ 0,00</span></div>
+                    <div class="card-row sub"><span>└ Valores a Abater</span> <span id="resOutrosAbater" style="color: var(--danger);">R$ 0,00</span></div>
+                    <div class="card-row card-total"><span id="outrosCardSubtotalLabel">= Saldo Outros</span> <span id="resOutrosTotal">R$ 0,00</span></div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px; border-color: var(--primary);">
+                <div class="card-row card-total" style="font-size: 1.3em; border: none; padding: 0;">
+                    <span>TOTAL LÍQUIDO GERAL DA CONDENAÇÃO</span>
+                    <span id="resTotalGeral">R$ 0,00</span>
+                </div>
+            </div>
+            
+            <div class="form-group" style="margin-top: 30px;">
+                <label style="color: var(--primary-dark); font-size: 1.1em; border-bottom: 1px solid var(--salmon-light); padding-bottom: 5px; margin-bottom: 10px;">Observações Finais do Relatório</label>
+                <textarea id="obsFinais" rows="3" placeholder="Insira aqui observações complementares, conclusões ou ressalvas finais que devam aparecer no final do PDF..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABA 4 - HONORÁRIOS SOBRE VALOR DA CAUSA -->
+    <div id="tab4" class="tab-content">
+        <h2>Honorários sobre Valor da Causa</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 20px;">
+            Cálculo com incidência ÚNICA. A correção monetária é aplicada a partir da data-base (Ajuizamento) até a data de atualização informada.<br>
+            Juros de mora incidem sobre o valor corrigido, utilizando o percentual acumulado a partir da Data do Trânsito em Julgado.
+        </p>
+
+        <div class="grid-3" style="background: var(--bg-main); padding: 15px; border-radius: 6px; border: 1px solid var(--border-main); margin-bottom: 20px;">
+            <div class="form-group">
+                <label>Valor da Causa (R$)</label>
+                <input type="text" inputmode="decimal" id="valorCausa" value="0,00" oninput="mascaraMoeda(this)">
+            </div>
+            <div class="form-group">
+                <label>Percentual Fixado (%)</label>
+                <input type="text" inputmode="decimal" id="percDecisao" value="0,00" oninput="mascaraMoeda(this)">
+            </div>
+            <div class="form-group">
+                <label>ID do Documento</label>
+                <input type="text" id="idDocHonCausa" placeholder="Número do documento">
+            </div>
+            <div class="form-group">
+                <label>Carregar Índices Web</label>
+                <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                    <button class="btn btn-outline" style="padding: 6px; font-size: 0.8em;" onclick="carregarIndicesWeb('EC113', this, 'tab4')">EC113</button>
+                    <button class="btn btn-outline" style="padding: 6px; font-size: 0.8em;" onclick="carregarIndicesWeb('EC136', this, 'tab4')">EC136</button>
+                    <button class="btn btn-outline" style="padding: 6px; font-size: 0.8em;" onclick="carregarIndicesWeb('ENCOGE', this, 'tab4')">ENCOGE</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-3" style="background: var(--bg-main); padding: 15px; border-radius: 6px; border: 1px solid var(--border-main); margin-bottom: 20px;">
+            <div class="form-group">
+                <label>Data-base / Ajuizamento</label>
+                <input type="date" id="dataAjuizamentoHonCausa">
+                <small style="color: var(--text-muted); font-size: 0.75em;">Preenchido automaticamente a partir da aba 1, editável.</small>
+            </div>
+            <div class="form-group">
+                <label>Data do Trânsito em Julgado</label>
+                <input type="date" id="dataTransitoHonCausa">
+            </div>
+            <div class="form-group">
+                <label>Data da Atualização (mm/aaaa)</label>
+                <input type="text" id="dataAtualizacaoHonCausa" placeholder="MM/AAAA" oninput="mascaraMesAno(this)" onblur="formataMesAno(this)">
+                <small style="color: var(--text-muted); font-size: 0.75em;">Apenas mês/ano. Usada para o cálculo do fator acumulado.</small>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label>Índices em Memória (Cole manualmente se a importação web falhar)</label>
+            <textarea id="rawIndicesEncoge" rows="4" placeholder="Mês/Ano \t Correção Monetária \t % Juros \t % SELIC" onblur="processarTxtIndicesEncoge(this.value)"></textarea>
+            <small style="color: var(--text-muted); font-size: 0.75em;">Os índices carregados pelos botões acima serão inseridos aqui automaticamente.</small>
+        </div>
+
+        <div style="margin-top: 20px; text-align: right;">
+            <button class="btn btn-primary" style="padding: 12px 24px; font-size: 1.1em;" onclick="calcularHonCausa()">🧮 Calcular Honorários (Linha Única)</button>
+        </div>
+
+        <div id="resultadoHonCausa" class="hidden" style="margin-top: 30px;">
+            <h3>Memória de Cálculo - Honorários sobre Valor da Causa</h3>
+            
+            <div class="memoria-calculo">
+                <h4>Dados de Entrada</h4>
+                <div class="memoria-row">
+                    <span>Valor da Causa:</span>
+                    <span id="memValorCausa">R$ 0,00</span>
+                </div>
+                <div class="memoria-row">
+                    <span>Percentual da Decisão:</span>
+                    <span id="memPercDecisao">0,00%</span>
+                </div>
+                <div class="memoria-row">
+                    <span>ID do Documento:</span>
+                    <span id="memIdDoc">-</span>
+                </div>
+                <div class="memoria-row">
+                    <span>Honorário Base:</span>
+                    <span id="memHonBase">R$ 0,00</span>
+                </div>
+            </div>
+
+            <div class="memoria-calculo" style="margin-top: 15px;">
+                <h4>Atualização Monetária (Fator Acumulado)</h4>
+                <div class="memoria-row">
+                    <span>Data-base utilizada:</span>
+                    <span id="memDataAju">-</span>
+                </div>
+                <div class="memoria-row">
+                    <span>Índice/Fator de Correção Acumulado (data-base):</span>
+                    <span id="memFatorCorrecao">1,000000</span>
+                </div>
+                <div class="memoria-row">
+                    <span>Valor Corrigido:</span>
+                    <span id="memValCorrigido">R$ 0,00</span>
+                </div>
+                <div class="memoria-row">
+                    <span>% Juros Acumulado (a partir do trânsito):</span>
+                    <span id="memPercJurAcu">0,00%</span>
+                </div>
+                <div class="memoria-row">
+                    <span>Juros Aplicados:</span>
+                    <span id="memJurosAplicados">R$ 0,00</span>
+                </div>
+                <div class="memoria-row total">
+                    <span>TOTAL ATUALIZADO:</span>
+                    <span id="memTotalAtualizado">R$ 0,00</span>
+                </div>
+            </div>
+
+            <div id="tabelaDetalhadaHonCausa" style="margin-top: 20px;">
+                <h4>Relatório Final de Honorários</h4>
+                <div class="table-responsive">
+                    <table id="tblHonCausa">
+                        <thead>
+                            <tr>
+                                <th class="center">Data-base</th>
+                                <th>Valor Base</th>
+                                <th>Fator Correção</th>
+                                <th>Valor Corrigido</th>
+                                <th>% Juros (Acum.)</th>
+                                <th>R$ Juros</th>
+                                <th>Total (R$)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyHonCausa"></tbody>
+                        <tfoot id="footHonCausa" style="font-weight: bold; background: var(--salmon-soft);"></tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABA 5 - OUTROS LANÇAMENTOS -->
+    <div id="tab5" class="tab-content">
+        <h2>Outros Lançamentos</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 15px;">
+            Adicione valores pontuais a serem somados ou abatidos do total final da conta.<br>
+            O fator de correção é calculado como (Índice Data Final / Índice Data Base), atualizando o valor original. 
+            Sobre o Valor Corrigido, incide um percentual de juros (específico por lançamento) para gerar o Valor Final.
+        </p>
+
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label>Carregar Índices Web (para atualização destes valores)</label>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-outline" onclick="carregarIndicesWeb('EC113', this, 'tab5')">⬇️ EC 113/2021</button>
+                <button class="btn btn-outline" onclick="carregarIndicesWeb('EC136', this, 'tab5')">⬇️ EC 136/2025</button>
+                <button class="btn btn-outline" onclick="carregarIndicesWeb('ENCOGE', this, 'tab5')">⬇️ ENCOGE (Estadual)</button>
+            </div>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label>Índices em Memória - Outros Lançamentos (cole ou carregue acima)</label>
+            <textarea id="rawIndicesOutros" rows="4" placeholder="Mês/Ano \t Correção Monetária \t % Juros \t % SELIC" onblur="processarTxtIndicesOutros(this.value); renderOutrosValores();"></textarea>
+            <small style="color: var(--text-muted); font-size: 0.75em;">Os índices carregados pelos botões acima serão inseridos aqui automaticamente.</small>
+        </div>
+
+        <div class="grid-2" style="margin-bottom: 20px;">
+            <div class="form-group">
+                <label>Título da Seção (no PDF)</label>
+                <input type="text" id="tituloOutros" value="OUTROS VALORES (Lançamentos Individuais)" style="font-weight: bold;">
+            </div>
+            <div class="form-group">
+                <label>Rótulo do Subtotal (no PDF)</label>
+                <input type="text" id="subtituloOutros" value="SALDO TOTAL DOS OUTROS VALORES" style="font-weight: bold;">
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table id="tblOutrosValores">
+                <thead>
+                    <tr>
+                        <th style="text-align: left;">Descrição</th>
+                        <th class="center">Valor Original</th>
+                        <th class="center">Data-base</th>
+                        <th class="center">Data Final</th>
+                        <th class="center">Fator</th>
+                        <th class="center">V. Corrigido</th>
+                        <th class="center">% Juros</th>
+                        <th class="center">V. Juros</th>
+                        <th class="center">Operação</th>
+                        <th class="center">V. Final</th>
+                        <th class="center">Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="bodyOutrosValores"></tbody>
+            </table>
+        </div>
+        <div style="margin-top: 15px;">
+            <button class="btn btn-success" onclick="addOutroValor()">➕ Adicionar Novo Valor</button>
+        </div>
+
+        <div class="form-group" style="margin-top: 30px;">
+            <label style="color: var(--primary-dark); font-size: 1.1em; border-bottom: 1px solid var(--salmon-light); padding-bottom: 5px; margin-bottom: 10px;">Observações sobre os Outros Lançamentos</label>
+            <textarea id="obsOutrosValores" rows="3" placeholder="Insira observações específicas sobre estes lançamentos (ex: origem, fundamento, etc.)"></textarea>
+        </div>
+    </div>
+
+    <!-- ABA 6 - INFORMAÇÃO TEXTUAL -->
+    <div id="tab6" class="tab-content">
+        <h2>Informação Textual / Parecer</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 15px;">
+            Escreva um texto descritivo do cálculo (parecer, resumo, fundamentação) que será inserido no PDF, logo após o cabeçalho.<br>
+            Use os botões para formatar (negrito, itálico, sublinhado, cor, quebra de página) e selecione o tamanho da fonte.
+        </p>
+
+        <div class="editor-toolbar">
+            <button onclick="formatarTexto('bold')"><b>N</b></button>
+            <button onclick="formatarTexto('italic')"><i>I</i></button>
+            <button onclick="formatarTexto('underline')"><u>S</u></button>
+            <button onclick="formatarTexto('color', document.getElementById('corSelecionada').value)"><span style="background:var(--primary);color:white;padding:0 6px;">A</span></button>
+            <input type="color" id="corSelecionada" value="#BE5014" style="width:30px;height:30px;padding:0;border:none;cursor:pointer;">
+            <span style="font-size:0.9em; color:var(--text-secondary);">Cor</span>
+            <select id="fontSizeSelect" onchange="alterarFonte()">
+                <option value="10">10</option>
+                <option value="10.5">10.5</option>
+                <option value="11">11</option>
+                <option value="11.5">11.5</option>
+                <option value="12" selected>12</option>
+                <option value="12.5">12.5</option>
+                <option value="13">13</option>
+                <option value="13.5">13.5</option>
+                <option value="14">14</option>
+            </select>
+            <span style="font-size:0.9em; color:var(--text-secondary);">tamanho</span>
+            <button onclick="inserirQuebraPagina()" style="background:var(--salmon-light);border-color:var(--primary);">⏎ Quebra de página</button>
+            <button onclick="limparTexto()" style="color:var(--danger);">Limpar</button>
+        </div>
+        <textarea id="textoLivre" rows="8" style="width:100%; font-family: 'Segoe UI', sans-serif; line-height: 1.6;" placeholder="Digite aqui o texto do parecer ou resumo..."></textarea>
+        <div style="margin-top: 10px;">
+            <button class="btn btn-outline" onclick="inserirExemplo()">📄 Inserir Exemplo</button>
+        </div>
+    </div>
+</div>
+
+<div id="printArea"></div>
+
+<script>
+    // --- ESTADO DA APLICAÇÃO ---
+    let lancamentos = [];
+    let indicesMap = {};
+    let editMode = false;
+    
+    // ABA 4
+    let indicesEncogeMap = {};
+    let honCausaCalculado = null;
+
+    // ABA 5 - OUTROS VALORES
+    let outrosValores = [];
+    let indicesOutrosMap = {};
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', () => {
+        togglePrescricao();
+        toggleMajoração();
+        toggleFracao();
+        toggleHonContratuais();
+        toggleHonSucumbenciais();
+        renderLancamentos();
+        renderOutrosValores();
+        syncAjuizamento();
+        let raw3 = document.getElementById('rawIndices').value;
+        if (raw3) {
+            document.getElementById('rawIndicesOutros').value = raw3;
+            processarTxtIndicesOutros(raw3);
+            renderOutrosValores();
+        }
+        atualizarTituloOutrosCard();
+        atualizarSaldoGuia5Exibido();
+    });
+
+    // --- UTILS FORMATADORES ---
+    const fmtMoeda = (v) => (v||0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const fmtIdx = (v) => (v||0).toLocaleString('pt-BR', { minimumFractionDigits: 6, maximumFractionDigits: 6 });
+    const fmtPerc = (v) => (v||0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
+    
+    const parseNum = (s) => {
+        if (typeof s === 'number') return s;
+        if (!s) return 0;
+        let n = s.toString().replace(/[^\d,-]/g, '').replace(',', '.');
+        return parseFloat(n) || 0;
+    };
+
+    function mascaraMoeda(input) {
+        let v = input.value.replace(/\D/g, '');
+        if (v === '') { input.value = ''; return; }
+        v = (parseInt(v) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        input.value = v;
+    }
+
+    function mascaraInteiro(input) {
+        input.value = input.value.replace(/\D/g, '');
+    }
+
+    function mascaraMesAno(input) {
+        let v = input.value.replace(/\D/g, '');
+        if (v.length > 6) v = v.substring(0, 6);
+        if (v.length >= 3) {
+            v = v.substring(0, 2) + '/' + v.substring(2);
+        }
+        input.value = v;
+    }
+
+    function normalizaMesAno(str) {
+        if (!str) return '';
+        let s = str.toString().toLowerCase().trim();
+
+        let match = s.match(/^(\d{1,2})[\/\-\s]+(\d{2,4})$/);
+        if (match) {
+            let mes = match[1].padStart(2, '0');
+            let ano = match[2];
+            if (ano.length === 2) ano = parseInt(ano) < 50 ? '20' + ano : '19' + ano;
+            return `${mes}/${ano}`;
+        }
+
+        let matchExt = s.match(/([a-zç]{3,})\.?[\/\-\s]+(\d{2,4})/i);
+        if (matchExt) {
+            let mesStr = matchExt[1].substring(0,3);
+            const mapa = { 'jan':'01', 'fev':'02', 'mar':'03', 'abr':'04', 'mai':'05', 'jun':'06', 'jul':'07', 'ago':'08', 'set':'09', 'out':'10', 'nov':'11', 'dez':'12' };
+            let mes = mapa[mesStr] || '00';
+            let ano = matchExt[2];
+            if (ano.length === 2) ano = parseInt(ano) < 50 ? '20' + ano : '19' + ano;
+            return `${mes}/${ano}`;
+        }
+
+        let matchFull = s.match(/(\d{1,2})[\/\-\s]+(\d{1,2})[\/\-\s]+(\d{2,4})/);
+        if (matchFull) {
+            let mes = matchFull[2].padStart(2, '0');
+            let ano = matchFull[3];
+            if (ano.length === 2) ano = parseInt(ano) < 50 ? '20' + ano : '19' + ano;
+            return `${mes}/${ano}`;
+        }
+
+        return s;
+    }
+
+    function formataMesAno(el) {
+        if(el.value) el.value = normalizaMesAno(el.value);
+    }
+    
+    function extrairMesAnoDeData(dataStr) {
+        if (!dataStr) return "";
+        if (dataStr.includes('-')) {
+            let p = dataStr.split('-');
+            return `${p[1]}/${p[0]}`;
+        }
+        return dataStr; 
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            if (e.target.tagName.toLowerCase() === 'input' && e.target.classList.contains('input-nav')) {
+                e.preventDefault();
+                let inputs = Array.from(document.querySelectorAll('.input-nav:not([readonly])'));
+                let index = inputs.indexOf(e.target);
+                if (index > -1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                    inputs[index + 1].select();
+                }
+            }
+        }
+    });
+
+    function openTab(tabId, btn) {
+        document.querySelectorAll('.tab-content, .tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        btn.classList.add('active');
+
+        if (tabId === 'tab4') {
+            syncAjuizamento();
+        }
+
+        if (tabId === 'tab5') {
+            let rawTab3 = document.getElementById('rawIndices').value;
+            let rawTab5 = document.getElementById('rawIndicesOutros').value;
+            if (rawTab3 && !rawTab5) {
+                document.getElementById('rawIndicesOutros').value = rawTab3;
+                processarTxtIndicesOutros(rawTab3);
+                renderOutrosValores();
+            }
+        }
+        if (tabId === 'tab1') {
+            atualizarSaldoGuia5Exibido();
+        }
+    }
+
+    function toggleNotas() {
+        document.getElementById('notasContainer').classList.toggle('hidden');
+    }
+
+    function togglePrescricao() {
+        const sim = document.getElementById('aplicaPrescricao').value === 'S';
+        document.getElementById('boxAnosPresc').classList.toggle('hidden', !sim);
+        document.getElementById('boxDataPresc').classList.toggle('hidden', !sim);
+        calcPrescricao();
+    }
+
+    function calcPrescricao() {
+        const sim = document.getElementById('aplicaPrescricao').value === 'S';
+        const ajuStr = document.getElementById('dataAjuizamento').value;
+        const anos = parseInt(document.getElementById('anosPresc').value) || 5;
+        
+        if (sim && ajuStr) {
+            let d = new Date(ajuStr);
+            d.setFullYear(d.getFullYear() - anos);
+            document.getElementById('dataInicioDif').value = d.toISOString().split('T')[0];
+        } else {
+            document.getElementById('dataInicioDif').value = '';
+        }
+    }
+    
+    function syncAjuizamento() {
+        let aju = document.getElementById('dataAjuizamento').value;
+        if (aju) {
+            document.getElementById('dataAjuizamentoHonCausa').value = aju;
+        }
+    }
+
+    function toggleMajoração() {
+        const suc = parseNum(document.getElementById('honSucumbencia').value) || 0;
+        document.getElementById('boxIdSucumb').classList.toggle('hidden', suc === 0);
+        document.getElementById('boxMajoracao').classList.toggle('hidden', suc === 0);
+        toggleMajoracaoDetalhes();
+        calcularSeNecessario();
+    }
+
+    function toggleMajoracaoDetalhes() {
+        const maj = parseNum(document.getElementById('honMajoracao').value) || 0;
+        document.querySelectorAll('.majoracao-det').forEach(el => el.classList.toggle('hidden', maj === 0));
+        calcularSeNecessario();
+    }
+
+    function toggleFracao() {
+        const sim = document.getElementById('aplicaFracao').value === 'S';
+        document.getElementById('fracaoGlobal').classList.toggle('hidden', !sim);
+        document.querySelectorAll('.col-frac').forEach(el => el.classList.toggle('hidden', !sim));
+    }
+
+    function toggleHonContratuais() {
+        const chk = document.getElementById('chkHonContratuais').checked;
+        const card = document.getElementById('cardContratuais');
+        if (chk) {
+            card.classList.remove('hidden');
+        } else {
+            card.classList.add('hidden');
+        }
+        calcularSeNecessario();
+    }
+
+    function toggleHonSucumbenciais() {
+        const chk = document.getElementById('chkHonSucumbenciais').checked;
+        const card = document.getElementById('cardSucumbencia');
+        const boxGuia5 = document.getElementById('boxGuia5Sucumb');
+        if (chk) {
+            card.classList.remove('hidden');
+            boxGuia5.classList.remove('hidden');
+            toggleMajoração();
+        } else {
+            card.classList.add('hidden');
+            boxGuia5.classList.add('hidden');
+            document.getElementById('boxMajoracao').classList.add('hidden');
+        }
+        calcularSeNecessario();
+    }
+
+    function calcularSeNecessario() {
+        if (!document.getElementById('resultadoTela').classList.contains('hidden')) {
+            calcularAtualizacao();
+        }
+        atualizarSaldoGuia5Exibido();
+    }
+
+    function atualizarInclusaoOutros() {
+        if (!document.getElementById('resultadoTela').classList.contains('hidden')) {
+            calcularAtualizacao();
+        }
+        atualizarTituloOutrosCard();
+    }
+
+    function atualizarTituloOutrosCard() {
+        let titulo = document.getElementById('tituloOutros').value || 'Outros Valores';
+        document.getElementById('outrosCardTitulo').innerText = '4. ' + titulo;
+        let subtitulo = document.getElementById('subtituloOutros').value || 'Saldo Outros';
+        document.getElementById('outrosCardSubtotalLabel').innerText = '= ' + subtitulo;
+    }
+
+    function atualizarSaldoGuia5Exibido() {
+        let saldo = 0;
+        outrosValores.forEach(l => {
+            let vFinal = l.valorFinal || l.valCorrigido || 0;
+            if (l.operacao === 'SOMAR') saldo += vFinal;
+            else saldo -= vFinal;
+        });
+        document.getElementById('saldoGuia5Exibido').innerText = fmtMoeda(saldo);
+    }
+
+    // --- EDITOR DE TEXTO ---
+    function formatarTexto(comando, cor) {
+        let textarea = document.getElementById('textoLivre');
+        let start = textarea.selectionStart;
+        let end = textarea.selectionEnd;
+        let selected = textarea.value.substring(start, end);
+        if (!selected) {
+            alert('Selecione um trecho do texto para aplicar a formatação.');
+            return;
+        }
+        let prefixo = '', sufixo = '';
+        if (comando === 'bold') { prefixo = '<b>'; sufixo = '</b>'; }
+        else if (comando === 'italic') { prefixo = '<i>'; sufixo = '</i>'; }
+        else if (comando === 'underline') { prefixo = '<u>'; sufixo = '</u>'; }
+        else if (comando === 'color') {
+            let corUsar = cor || document.getElementById('corSelecionada').value;
+            prefixo = `<span style="color:${corUsar};">`;
+            sufixo = '</span>';
+        }
+        let novo = prefixo + selected + sufixo;
+        textarea.value = textarea.value.substring(0, start) + novo + textarea.value.substring(end);
+        textarea.selectionStart = start;
+        textarea.selectionEnd = start + novo.length;
+        textarea.focus();
+    }
+
+    function alterarFonte() {
+        let tamanho = document.getElementById('fontSizeSelect').value;
+        document.getElementById('textoLivre').style.fontSize = tamanho + 'pt';
+    }
+
+    function inserirQuebraPagina() {
+        let textarea = document.getElementById('textoLivre');
+        let start = textarea.selectionStart;
+        let quebra = '<div class="page-break"></div>';
+        textarea.value = textarea.value.substring(0, start) + quebra + textarea.value.substring(start);
+        textarea.selectionStart = start + quebra.length;
+        textarea.focus();
+    }
+
+    function limparTexto() {
+        if (confirm('Limpar todo o texto?')) {
+            document.getElementById('textoLivre').value = '';
+        }
+    }
+
+    function inserirExemplo() {
+        let ex = `<b>Sobre os cálculos:</b><br>
+O presente cálculo tem por finalidade apurar o valor devido pela parte ré em cumprimento ao disposto no item "c" da r. sentença de ID 241377514, página 05, que assim determinou:<br>
+<br>
+<span style="color:#BE5014;"><b>"c) CONDENAR</b></span> a requerida ao pagamento das custas processuais e honorários advocatícios, que fixo em 15% (quinze por cento) sobre o valor da causa, nos termos do art. 85, §2º, do CPC."<br>
+<br>
+Considerando que o valor atribuído à causa foi de R$ 20.172,56, os honorários advocatícios correspondem a 15%, perfazendo o montante inicial de R$ 3.025,88, posteriormente atualizado na forma dos cálculos apresentados.<br>
+<br>
+A atualização monetária foi realizada de acordo com a Tabela ENCOGE para débitos na Justiça Estadual, disponível no portal gilbertonelo.com.br, com consulta efetuada em 07/07/2026, às 16h25.`;
+        document.getElementById('textoLivre').value = ex;
+        alterarFonte();
+    }
+
+    // --- FUNÇÕES DE LANÇAMENTOS (CÁLCULO PRINCIPAL) ---
+    function toggleEditMode() {
+        editMode = !editMode;
+        const btn = document.getElementById('btnEditMode');
+        if (editMode) {
+            btn.innerHTML = '🔒 Bloquear Edição';
+            btn.classList.add('active');
+        } else {
+            btn.innerHTML = '✏️ Editar Valores';
+            btn.classList.remove('active');
+        }
+        renderLancamentos();
+    }
+
+    function limparLancamentos() {
+        if(confirm("Tem certeza que deseja limpar todos os valores lançados? Esta ação não pode ser desfeita.")) {
+            lancamentos = [];
+            renderLancamentos();
+            document.getElementById('resultadoTela').classList.add('hidden');
+        }
+    }
+
+    function processarColagem() {
+        const area = document.getElementById('areaColagem');
+        const raw = area.value.trim();
+        if (!raw) return alert("Cole os dados primeiro.");
+        
+        const linhas = raw.split('\n');
+        let importados = 0;
+
+        linhas.forEach(linha => {
+            let cols = linha.trim().split(/\t|;|\s{2,}/);
+            if (cols.length >= 3) {
+                let comp = normalizaMesAno(cols[0]);
+                if (comp.match(/^\d{2}\/\d{4}$/)) {
+                    lancamentos.push({
+                        ativa: true,
+                        comp: comp,
+                        recebido: parseNum(cols[1]),
+                        devido: parseNum(cols[2]),
+                        fracao: 100
+                    });
+                    importados++;
+                }
+            }
+        });
+
+        if (importados > 0) {
+            area.value = ''; 
+            renderLancamentos();
+        } else {
+            alert("Nenhum dado válido encontrado. Verifique se o formato contém: Competência | Recebido | Devido.");
+        }
+    }
+
+    function gerarCompetenciasAuto() {
+        let dtIni = document.getElementById('dataInicioDif').value || document.getElementById('dataAjuizamento').value;
+        let dtFimStr = document.getElementById('dataAtualizacao').value;
+        
+        if(!dtIni || !dtFimStr) return alert("Preencha a Data de Início (ou Ajuizamento) e a Data de Atualização na Aba 1.");
+        
+        let dIni = new Date(dtIni);
+        let [mFim, aFim] = dtFimStr.split('/');
+        let dFim = new Date(aFim, mFim - 1, 1);
+
+        let curr = new Date(dIni.getFullYear(), dIni.getMonth(), 1);
+        while(curr <= dFim) {
+            let mm = String(curr.getMonth() + 1).padStart(2, '0');
+            let aaaa = curr.getFullYear();
+            let c = `${mm}/${aaaa}`;
+            
+            if(!lancamentos.find(l => l.comp === c)) {
+                lancamentos.push({ ativa: true, comp: c, recebido: 0, devido: 0, fracao: 100 });
+            }
+            curr.setMonth(curr.getMonth() + 1);
+        }
+        
+        lancamentos.sort((a,b) => {
+            let [ma, aa] = a.comp.split('/'); let [mb, ab] = b.comp.split('/');
+            return new Date(aa, ma-1) - new Date(ab, mb-1);
+        });
+        renderLancamentos();
+    }
+
+    function addLinhaManual() {
+        lancamentos.push({ ativa: true, comp: '', recebido: 0, devido: 0, fracao: 100 });
+        renderLancamentos();
+    }
+
+    function deleteLinha(idx) {
+        requestAnimationFrame(() => {
+            lancamentos.splice(idx, 1);
+            renderLancamentos();
+            calcularSeNecessario();
+        });
+    }
+
+    function renderLancamentos() {
+        const tbody = document.getElementById('bodyLancamento');
+        let html = '';
+        const attrReadonly = editMode ? '' : 'readonly tabindex="-1"';
+
+        lancamentos.forEach((l, i) => {
+            let dif = l.devido - l.recebido;
+            let classAlert = dif < 0 ? 'alert-text' : '';
+            let styleInativa = !l.ativa ? 'opacity: 0.5; text-decoration: line-through; background: #eee;' : '';
+            
+            html += `
+                <tr style="${styleInativa}" id="tr_lan_${i}">
+                    <td class="center"><input type="checkbox" ${l.ativa ? 'checked' : ''} onchange="atualizaEstado(${i}, 'ativa', this.checked)"></td>
+                    <td class="center"><input type="text" class="input-tbl input-nav" value="${l.comp}" onblur="atualizaCampo(${i}, 'comp', this)" ${attrReadonly}></td>
+                    <td><input type="text" inputmode="decimal" class="input-tbl input-nav" value="${fmtMoeda(l.devido)}" oninput="mascaraMoeda(this)" onblur="atualizaCampo(${i}, 'devido', this)" ${attrReadonly}></td>
+                    <td><input type="text" inputmode="decimal" class="input-tbl input-nav" value="${fmtMoeda(l.recebido)}" oninput="mascaraMoeda(this)" onblur="atualizaCampo(${i}, 'recebido', this)" ${attrReadonly}></td>
+                    <td class="${classAlert}" id="td_dif_${i}">${fmtMoeda(dif)}</td>
+                    <td class="center"><button class="btn btn-danger" style="padding:4px 8px" onclick="deleteLinha(${i})" title="Remover">X</button></td>
+                </tr>
+            `;
+        });
+        tbody.innerHTML = html;
+    }
+
+    function atualizaCampo(idx, field, inputObj) {
+        if(field === 'comp') {
+            let n = normalizaMesAno(inputObj.value);
+            inputObj.value = n;
+            lancamentos[idx].comp = n;
+            return;
+        }
+        
+        let val = parseNum(inputObj.value);
+        lancamentos[idx][field] = val;
+        
+        let dif = lancamentos[idx].devido - lancamentos[idx].recebido;
+        let tdDif = document.getElementById(`td_dif_${idx}`);
+        if(tdDif) {
+            tdDif.innerText = fmtMoeda(dif);
+            tdDif.className = dif < 0 ? 'alert-text' : '';
+        }
+    }
+
+    function atualizaEstado(idx, field, checked) {
+        lancamentos[idx][field] = checked;
+        let tr = document.getElementById(`tr_lan_${idx}`);
+        if(tr) {
+            tr.style.opacity = checked ? '1' : '0.5';
+            tr.style.textDecoration = checked ? 'none' : 'line-through';
+            tr.style.background = checked ? '' : '#eee';
+        }
+        calcularSeNecessario();
+    }
+
+    // --- ABA 5 - OUTROS VALORES (com juros) ---
+    function addOutroValor() {
+        outrosValores.push({
+            descricao: '',
+            valorOriginal: 0,
+            dataBase: '',
+            dataFinal: '',
+            operacao: 'SOMAR',
+            fatorAplicado: 1.0,
+            valCorrigido: 0,
+            percentualJuros: 0,
+            valorJuros: 0,
+            valorFinal: 0
+        });
+        renderOutrosValores();
+    }
+
+    function deleteOutroValor(idx) {
+        outrosValores.splice(idx, 1);
+        renderOutrosValores();
+    }
+
+    function atualizaOutroValor(idx, field, value) {
+        outrosValores[idx][field] = value;
+        renderOutrosValores();
+    }
+
+    function atualizaJurosOutro(idx, input) {
+        let val = parseNum(input.value);
+        outrosValores[idx].percentualJuros = val;
+        renderOutrosValores();
+    }
+
+    function atualizaFatorOutro(idx, input) {
+        let val = parseNum(input.value);
+        if (val > 0) {
+            outrosValores[idx].fatorAplicado = val;
+            renderOutrosValores();
+        }
+    }
+
+    function renderOutrosValores() {
+        let html = '';
+        outrosValores.forEach((l, i) => {
+            let fBase = 1.0;
+            let fFinal = 1.0;
+
+            if (l.dataBase) {
+                let compBase = normalizaMesAno(l.dataBase);
+                fBase = indicesOutrosMap[compBase] ? indicesOutrosMap[compBase].cor : 1.0;
+            }
+            if (l.dataFinal) {
+                let compFinal = normalizaMesAno(l.dataFinal);
+                fFinal = indicesOutrosMap[compFinal] ? indicesOutrosMap[compFinal].cor : 1.0;
+            }
+            
+            let fatorCalculado = (fBase > 0 && fFinal > 0) ? (fFinal / fBase) : 1.0;
+            if (l.fatorAplicado === 0 || l.fatorAplicado === undefined) {
+                l.fatorAplicado = fatorCalculado;
+            }
+
+            let valCorrigido = l.valorOriginal * l.fatorAplicado;
+            l.valCorrigido = valCorrigido;
+
+            let percJuros = l.percentualJuros || 0;
+            let valJuros = valCorrigido * (percJuros / 100);
+            let valFinal = valCorrigido + valJuros;
+            l.valorJuros = valJuros;
+            l.valorFinal = valFinal;
+
+            html += `
+                <tr>
+                    <td><input type="text" class="input-tbl" style="width: 100%; text-align:left;" value="${l.descricao}" onblur="atualizaOutroValor(${i}, 'descricao', this.value)"></td>
+                    <td class="center"><input type="text" class="input-tbl" value="${fmtMoeda(l.valorOriginal)}" oninput="mascaraMoeda(this)" onblur="atualizaOutroValor(${i}, 'valorOriginal', parseNum(this.value))"></td>
+                    <td class="center"><input type="text" class="input-tbl" style="width:75px" placeholder="MM/AAAA" value="${l.dataBase}" oninput="mascaraMesAno(this)" onblur="atualizaOutroValor(${i}, 'dataBase', this.value)"></td>
+                    <td class="center"><input type="text" class="input-tbl" style="width:75px" placeholder="MM/AAAA" value="${l.dataFinal}" oninput="mascaraMesAno(this)" onblur="atualizaOutroValor(${i}, 'dataFinal', this.value)"></td>
+                    <td class="center">
+                        <input type="text" class="input-tbl" style="width:100px; text-align:center;" value="${fmtIdx(l.fatorAplicado)}" onblur="atualizaFatorOutro(${i}, this)">
+                    </td>
+                    <td style="font-weight:bold; vertical-align:middle; text-align:right;">${fmtMoeda(l.valCorrigido)}</td>
+                    <td class="center">
+                        <input type="text" class="input-tbl" style="width:70px; text-align:center;" value="${fmtMoeda(l.percentualJuros)}" oninput="mascaraMoeda(this)" onblur="atualizaJurosOutro(${i}, this)">
+                    </td>
+                    <td style="font-weight:bold; vertical-align:middle; text-align:right;">${fmtMoeda(l.valorJuros)}</td>
+                    <td class="center">
+                        <select class="input-tbl" style="width:90px; text-align:center" onchange="atualizaOutroValor(${i}, 'operacao', this.value)">
+                            <option value="SOMAR" ${l.operacao==='SOMAR'?'selected':''}>Somar</option>
+                            <option value="ABATER" ${l.operacao==='ABATER'?'selected':''}>Abater</option>
+                        </select>
+                    </td>
+                    <td style="font-weight:bold; vertical-align:middle; text-align:right; color: var(--primary-dark);">${fmtMoeda(l.valorFinal)}</td>
+                    <td class="center"><button class="btn btn-danger" style="padding:4px 8px" onclick="deleteOutroValor(${i})">X</button></td>
+                </tr>
+            `;
+        });
+        document.getElementById('bodyOutrosValores').innerHTML = html;
+        calcularSeNecessario();
+        atualizarTituloOutrosCard();
+        atualizarSaldoGuia5Exibido();
+    }
+
+    // --- CARREGAMENTO DE ÍNDICES (WEB) ---
+    async function carregarIndicesWeb(nomeAba, btn, targetTab = 'tab3') {
+        const baseUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR94jhhyuvlBxSLkhTSHfSJm5lDYxZUmbDIx5VB0TbbCo23rD4QcgG_Ft3Ii9yFnJ3LyKWjLtomgvqy/pub?output=tsv&single=true&gid=";
+        
+        const configGid = {
+            'EC113': '1468370044',
+            'EC136': '0',
+            'ENCOGE': '1509896321'
+        };
+
+        const alvoGid = configGid[nomeAba];
+        if (!alvoGid) {
+            alert(`GID não configurado para ${nomeAba}.`);
+            return;
+        }
+
+        const targetUrl = baseUrl + alvoGid;
+        const txtOrig = btn.innerHTML;
+        
+        btn.innerHTML = '⏳ Carregando...'; 
+        btn.disabled = true;
+
+        const proxies = [
+            { nome: 'CORSProxy.io', urlFn: (url) => `https://corsproxy.io/?${encodeURIComponent(url)}` },
+            { nome: 'AllOrigins', urlFn: (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}` }
+        ];
+
+        let sucesso = false;
+
+        for (let proxy of proxies) {
+            if (sucesso) break;
+            
+            let proxyUrl = proxy.urlFn(targetUrl);
+            
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+                let res = await fetch(proxyUrl, { signal: controller.signal });
+                clearTimeout(timeoutId);
+                
+                if (!res.ok) continue;
+                
+                let txt = await res.text();
+                if (!txt || txt.trim() === '' || txt.includes('<html')) continue;
+                
+                if (targetTab === 'tab4') {
+                    indicesEncogeMap = {};
+                    processarTxtIndicesEncoge(txt);
+                    const contagemIndices = Object.keys(indicesEncogeMap).length;
+                    
+                    if (contagemIndices > 0) {
+                        document.getElementById('rawIndicesEncoge').value = txt;
+                        sucesso = true;
+                        alert(`Índices carregados com sucesso! (${contagemIndices} registros)`);
+                    }
+                } else if (targetTab === 'tab5') {
+                    indicesOutrosMap = {};
+                    processarTxtIndicesOutros(txt);
+                    const contagemIndices = Object.keys(indicesOutrosMap).length;
+                    
+                    if (contagemIndices > 0) {
+                        document.getElementById('rawIndicesOutros').value = txt;
+                        sucesso = true;
+                        alert(`Índices carregados com sucesso! (${contagemIndices} registros)`);
+                    }
+                } else {
+                    indicesMap = {};
+                    processarTxtIndices(txt);
+                    const contagemIndices = Object.keys(indicesMap).length;
+                    
+                    if (contagemIndices > 0) {
+                        document.getElementById('rawIndices').value = txt;
+                        sucesso = true;
+                        alert(`Índices carregados com sucesso! (${contagemIndices} registros)`);
+                    }
+                }
+
+            } catch (e) { 
+                console.warn(`[${nomeAba}] Erro no proxy ${proxy.nome}`);
+            }
+        }
+        
+        if (!sucesso) {
+            alert(`Falha de conexão: Não foi possível carregar os índices ${nomeAba} automaticamente.\n\nPor favor, tente novamente ou copie/cole os dados manualmente.`);
+        }
+        
+        btn.innerHTML = txtOrig; 
+        btn.disabled = false;
+        
+        if (sucesso) {
+            if (targetTab === 'tab3') calcularSeNecessario();
+            if (targetTab === 'tab4') { /* aguarda clique em calcular */ }
+            if (targetTab === 'tab5') renderOutrosValores();
+        }
+    }
+
+    function processarTxtIndices(raw) {
+        indicesMap = {};
+        raw.split('\n').forEach(l => {
+            let c = l.split('\t');
+            if(c.length >= 4) {
+                let m = normalizaMesAno(c[0]);
+                if(m.match(/^\d{2}\/\d{4}$/)) {
+                    indicesMap[m] = { cor: parseNum(c[1]), jur: parseNum(c[2]), sel: parseNum(c[3]) };
+                }
+            }
+        });
+    }
+
+    function processarTxtIndicesEncoge(raw) {
+        indicesEncogeMap = {};
+        raw.split('\n').forEach(l => {
+            let c = l.split('\t');
+            if(c.length >= 4) {
+                let m = normalizaMesAno(c[0]);
+                if(m.match(/^\d{2}\/\d{4}$/)) {
+                    indicesEncogeMap[m] = { cor: parseNum(c[1]), jur: parseNum(c[2]), sel: parseNum(c[3]) };
+                }
+            }
+        });
+    }
+
+    function processarTxtIndicesOutros(raw) {
+        indicesOutrosMap = {};
+        raw.split('\n').forEach(l => {
+            let c = l.split('\t');
+            if(c.length >= 4) {
+                let m = normalizaMesAno(c[0]);
+                if(m.match(/^\d{2}\/\d{4}$/)) {
+                    indicesOutrosMap[m] = { cor: parseNum(c[1]), jur: parseNum(c[2]), sel: parseNum(c[3]) };
+                }
+            }
+        });
+    }
+
+    function aplicarFracaoGlobal() {
+        let fg = parseNum(document.getElementById('fracaoGlobal').value) || 100;
+        lancamentos.forEach(l => l.fracao = fg);
+        calcularSeNecessario();
+    }
+
+    // --- CÁLCULO PRINCIPAL ---
+    function calcularAtualizacao() {
+        const body = document.getElementById('bodyCorrecao');
+        const foot = document.getElementById('footCorrecao');
+        
+        document.getElementById('resultadoTela').classList.remove('hidden');
+        
+        let aplicaFrac = document.getElementById('aplicaFracao').value === 'S';
+        let displayFrac = aplicaFrac ? '' : 'hidden';
+
+        let tDev = 0, tRec = 0, tDif = 0, tDifAj = 0, tAtu = 0, tJur = 0, tSel = 0, tGeral = 0;
+        let tAtuSuc = 0, tJurSuc = 0, tSelSuc = 0, tGeralSuc = 0;
+        let dataLimiteSuc = document.getElementById('dataLimiteSucumbencia').value;
+        
+        let html = '';
+
+        lancamentos.forEach((l, i) => {
+            if(!l.ativa) return;
+            
+            let dif = l.devido - l.recebido;
+            let fracao = aplicaFrac ? (l.fracao || 100) : 100;
+            let difAj = dif * (fracao / 100);
+            
+            let idx = indicesMap[l.comp] || { cor: 1.0, jur: 0, sel: 0 };
+            
+            let valCor = difAj * idx.cor;
+            let valJur = valCor * (idx.jur / 100);
+            let valSel = (valCor + valJur) * (idx.sel / 100);
+            let tot = valCor + valJur + valSel;
+
+            tDev += l.devido; tRec += l.recebido; tDif += dif; tDifAj += difAj;
+            tAtu += valCor; tJur += valJur; tSel += valSel; tGeral += tot;
+
+            if (dataLimiteSuc) {
+                let [mm, aa] = l.comp.split('/');
+                let compDate = new Date(aa, parseInt(mm) - 1, 1);
+                let limiteDate = new Date(dataLimiteSuc);
+                if (compDate <= limiteDate) {
+                    tAtuSuc += valCor;
+                    tJurSuc += valJur;
+                    tSelSuc += valSel;
+                    tGeralSuc += tot;
+                }
+            } else {
+                tAtuSuc += valCor;
+                tJurSuc += valJur;
+                tSelSuc += valSel;
+                tGeralSuc += tot;
+            }
+
+            html += `
+                <tr>
+                    <td class="center">${l.comp}</td>
+                    <td>${fmtMoeda(l.devido)}</td>
+                    <td>${fmtMoeda(l.recebido)}</td>
+                    <td>${fmtMoeda(dif)}</td>
+                    <td class="col-frac center ${displayFrac}">
+                        <input type="text" inputmode="decimal" class="input-frac input-nav" value="${fmtMoeda(fracao)}" oninput="mascaraMoeda(this)" onblur="atualizaFracao(${i}, this)">
+                    </td>
+                    <td class="col-frac ${displayFrac}">${fmtMoeda(difAj)}</td>
+                    <td>${fmtIdx(idx.cor)}</td>
+                    <td>${fmtMoeda(valCor)}</td>
+                    <td>${fmtMoeda(idx.jur)}%</td>
+                    <td>${fmtMoeda(valJur)}</td>
+                    <td>${fmtMoeda(idx.sel)}%</td>
+                    <td>${fmtMoeda(valSel)}</td>
+                    <td style="font-weight:bold">${fmtMoeda(tot)}</td>
+                </tr>
+            `;
+        });
+        
+        body.innerHTML = html;
+
+        foot.innerHTML = `
+            <tr>
+                <td class="center">TOTAIS</td>
+                <td>${fmtMoeda(tDev)}</td>
+                <td>${fmtMoeda(tRec)}</td>
+                <td>${fmtMoeda(tDif)}</td>
+                <td class="col-frac ${displayFrac}"></td>
+                <td class="col-frac ${displayFrac}">${fmtMoeda(tDifAj)}</td>
+                <td>-</td>
+                <td>${fmtMoeda(tAtu)}</td>
+                <td>-</td>
+                <td>${fmtMoeda(tJur)}</td>
+                <td>-</td>
+                <td>${fmtMoeda(tSel)}</td>
+                <td style="font-size: 1.1em; color: var(--primary-dark)">${fmtMoeda(tGeral)}</td>
+            </tr>
+        `;
+
+        let saldoGuia5 = 0;
+        outrosValores.forEach(l => {
+            let vFinal = l.valorFinal || l.valCorrigido || 0;
+            if (l.operacao === 'SOMAR') saldoGuia5 += vFinal;
+            else saldoGuia5 -= vFinal;
+        });
+
+        let incluirOutros = document.getElementById('incluirOutrosNoPrincipal').checked;
+        let tOutrosSomar = 0, tOutrosAbater = 0;
+        if (incluirOutros) {
+            outrosValores.forEach(l => {
+                let vFinal = l.valorFinal || l.valCorrigido || 0;
+                if (l.operacao === 'SOMAR') tOutrosSomar += vFinal;
+                else tOutrosAbater += vFinal;
+            });
+        }
+
+        atualizarResumoFinal(tAtu, tJur, tSel, tGeral, tAtuSuc, tJurSuc, tSelSuc, tGeralSuc, tOutrosSomar, tOutrosAbater, incluirOutros, saldoGuia5);
+    }
+
+    function atualizaFracao(idx, inputObj) {
+        lancamentos[idx].fracao = parseNum(inputObj.value);
+        calcularAtualizacao();
+    }
+
+    // --- RESUMO FINAL ---
+    function atualizarResumoFinal(prin, jur, sel, tot, prinSuc, jurSuc, selSuc, totSuc, outrosSomar, outrosAbater, incluirOutros, saldoGuia5) {
+        let chkContratuais = document.getElementById('chkHonContratuais').checked;
+        let chkSucumbenciais = document.getElementById('chkHonSucumbenciais').checked;
+        
+        let hc = parseNum(document.getElementById('honContratuais').value) || 0;
+        let hs_base = parseNum(document.getElementById('honSucumbencia').value) || 0;
+        let maj = parseNum(document.getElementById('honMajoracao').value) || 0;
+        let tipoMaj = document.getElementById('tipoMajoracao').value;
+
+        let hs_final = hs_base;
+        let textMaj = '';
+        if (hs_base > 0 && maj > 0) {
+            if (tipoMaj === 'aditiva') {
+                hs_final = hs_base + maj;
+                textMaj = `Majoração Aditiva: Base ${fmtMoeda(hs_base)}% + ${fmtMoeda(maj)}% = ${fmtMoeda(hs_final)}%`;
+            } else {
+                hs_final = hs_base + (hs_base * (maj/100));
+                textMaj = `Majoração Multiplicativa: Base ${fmtMoeda(hs_base)}% + (${fmtMoeda(maj)}% sobre base) = ${fmtMoeda(hs_final)}%`;
+            }
+        }
+
+        let fatAut = (100 - hc) / 100;
+        let fatCon = hc / 100;
+        let fatSuc = hs_final / 100;
+
+        document.getElementById('resAutPerc').innerText = `${fmtMoeda(100 - hc)}%`;
+        document.getElementById('resAutPrin').innerText = fmtMoeda(prin * fatAut);
+        document.getElementById('resAutJur').innerText = fmtMoeda(jur * fatAut);
+        document.getElementById('resAutSel').innerText = fmtMoeda(sel * fatAut);
+        document.getElementById('resAutTot').innerText = fmtMoeda(tot * fatAut);
+
+        if (chkContratuais) {
+            document.getElementById('cardContratuais').classList.remove('hidden');
+            document.getElementById('resContPerc').innerText = `${fmtMoeda(hc)}%`;
+            document.getElementById('resContPrin').innerText = fmtMoeda(prin * fatCon);
+            document.getElementById('resContJur').innerText = fmtMoeda(jur * fatCon);
+            document.getElementById('resContSel').innerText = fmtMoeda(sel * fatCon);
+            document.getElementById('resContTot').innerText = fmtMoeda(tot * fatCon);
+        } else {
+            document.getElementById('cardContratuais').classList.add('hidden');
+            fatAut = 1;
+            document.getElementById('resAutPerc').innerText = '100,00%';
+            document.getElementById('resAutPrin').innerText = fmtMoeda(prin);
+            document.getElementById('resAutJur').innerText = fmtMoeda(jur);
+            document.getElementById('resAutSel').innerText = fmtMoeda(sel);
+            document.getElementById('resAutTot').innerText = fmtMoeda(tot);
+        }
+
+        let incluiGuia5 = document.getElementById('chkSucumbenciaIncluiGuia5').checked;
+
+        if (chkSucumbenciais && hs_final > 0) {
+            document.getElementById('cardSucumbencia').classList.remove('hidden');
+            document.getElementById('resSucPerc').innerText = `${fmtMoeda(hs_final)}%`;
+
+            let fator = hs_final / 100;
+
+            let valPrincipalSuc = prinSuc * fator;
+            let valJurosSuc = jurSuc * fator;
+            let valSelicSuc = selSuc * fator;
+            let totalSuc = valPrincipalSuc + valJurosSuc + valSelicSuc;
+
+            let htmlExtra = '';
+            let infoTexts = [];
+            if (incluiGuia5) {
+                infoTexts.push('Lançamentos adicionais considerados:');
+                outrosValores.forEach((l, idx) => {
+                    if (l.valorOriginal === 0 && l.valorFinal === 0) return;
+
+                    let vCorr = l.valCorrigido || 0;
+                    let vJuros = l.valorJuros || 0;
+                    let honCorr = vCorr * fator;
+                    let honJuros = vJuros * fator;
+                    let subTotal = honCorr + honJuros;
+                    totalSuc += subTotal;
+
+                    let desc = l.descricao || 'Lançamento ' + (idx + 1);
+
+                    htmlExtra += `
+                        <div class="card-row sub" style="margin-top:5px; border-top:1px dashed #ddd; padding-top:5px;">
+                            <span style="font-weight:600;">${desc}</span>
+                        </div>
+                        <div class="card-row sub" style="padding-left:30px;">
+                            <span>├ Corrigido</span> <span>${fmtMoeda(honCorr)}</span>
+                        </div>
+                        <div class="card-row sub" style="padding-left:30px;">
+                            <span>└ Juros</span> <span>${fmtMoeda(honJuros)}</span>
+                        </div>
+                    `;
+
+                    infoTexts.push(`${desc}:`);
+                    infoTexts.push(`  - Valor Corrigido: R$ ${fmtMoeda(vCorr)}`);
+                    infoTexts.push(`  - Juros: R$ ${fmtMoeda(vJuros)}`);
+                    infoTexts.push(`  - Honorários sobre valor corrigido: R$ ${fmtMoeda(honCorr)}`);
+                    infoTexts.push(`  - Honorários sobre juros: R$ ${fmtMoeda(honJuros)}`);
+                    infoTexts.push(`  - Subtotal do lançamento: R$ ${fmtMoeda(subTotal)}`);
+                });
+
+                let totalAdicional = totalSuc - (valPrincipalSuc + valJurosSuc + valSelicSuc);
+                infoTexts.push(`Subtotal dos lançamentos adicionais: R$ ${fmtMoeda(totalAdicional)}`);
+            }
+
+            document.getElementById('resSucPrin').innerText = fmtMoeda(valPrincipalSuc);
+            document.getElementById('resSucJur').innerText = fmtMoeda(valJurosSuc);
+            document.getElementById('resSucSel').innerText = fmtMoeda(valSelicSuc);
+            document.getElementById('resSucTot').innerText = fmtMoeda(totalSuc);
+
+            let extraContainer = document.getElementById('sucumbenciaDetalhesExtra');
+            if (!extraContainer) {
+                let selicRow = document.getElementById('resSucSel').closest('.card-row');
+                let parent = selicRow.parentNode;
+                let container = document.createElement('div');
+                container.id = 'sucumbenciaDetalhesExtra';
+                selicRow.after(container);
+                extraContainer = container;
+            }
+            extraContainer.innerHTML = htmlExtra;
+
+            let infoTextsFinal = [];
+            if (textMaj) infoTextsFinal.push(textMaj);
+            infoTextsFinal.push('Base original da sucumbência:');
+            infoTextsFinal.push(`  - Principal Corrigido: R$ ${fmtMoeda(prinSuc)}`);
+            infoTextsFinal.push(`  - Juros: R$ ${fmtMoeda(jurSuc)}`);
+            infoTextsFinal.push(`  - SELIC: R$ ${fmtMoeda(selSuc)}`);
+            if (incluiGuia5) {
+                infoTextsFinal.push(...infoTexts);
+            }
+            infoTextsFinal.push(`Percentual aplicado: ${fmtMoeda(hs_final)}%`);
+            infoTextsFinal.push(`TOTAL HONORÁRIOS SUCUMBENCIAIS: R$ ${fmtMoeda(totalSuc)}`);
+            document.getElementById('infoMajoracao').innerText = infoTextsFinal.join('\n');
+
+        } else {
+            document.getElementById('cardSucumbencia').classList.add('hidden');
+            document.getElementById('infoMajoracao').innerText = '';
+            let extraContainer = document.getElementById('sucumbenciaDetalhesExtra');
+            if (extraContainer) extraContainer.innerHTML = '';
+        }
+
+        let cardOutros = document.getElementById('cardOutrosValores');
+        if (incluirOutros && (outrosSomar > 0 || outrosAbater > 0)) {
+            cardOutros.classList.remove('hidden');
+            document.getElementById('resOutrosSomar').innerText = fmtMoeda(outrosSomar);
+            document.getElementById('resOutrosAbater').innerText = fmtMoeda(outrosAbater);
+            document.getElementById('resOutrosTotal').innerText = fmtMoeda(outrosSomar - outrosAbater);
+            atualizarTituloOutrosCard();
+        } else {
+            cardOutros.classList.add('hidden');
+        }
+
+        let totalLiquido = tot;
+        if (incluirOutros) {
+            totalLiquido += (outrosSomar - outrosAbater);
+        }
+        document.getElementById('resTotalGeral').innerText = fmtMoeda(totalLiquido);
+    }
+
+    // --- CÁLCULO DE HONORÁRIOS (LINHA ÚNICA) ---
+    function calcularHonCausa() {
+        let valorCausa = parseNum(document.getElementById('valorCausa').value);
+        let percDecisao = parseNum(document.getElementById('percDecisao').value);
+        let dataAju = document.getElementById('dataAjuizamentoHonCausa').value;
+        let dataTransito = document.getElementById('dataTransitoHonCausa').value;
+        let dataAtu = document.getElementById('dataAtualizacaoHonCausa').value;
+        let idDoc = document.getElementById('idDocHonCausa').value.trim() || '-';
+
+        if (!valorCausa || !percDecisao || !dataAju) {
+            alert('Preencha ao menos o Valor da Causa, Percentual e Data-base/Ajuizamento.');
+            return;
+        }
+
+        if (Object.keys(indicesEncogeMap).length === 0) {
+            alert('Carregue os índices solicitados (Web) ou cole-os manualmente na aba "Honorários" antes de calcular.');
+            return;
+        }
+
+        let compAju = extrairMesAnoDeData(dataAju);
+        let idxBase = indicesEncogeMap[compAju];
+        if (!idxBase) {
+            alert(`Índice não encontrado para a data-base ${compAju}. Verifique se os índices carregados cobrem este período.`);
+            return;
+        }
+        let fatorCorrecao = idxBase.cor;
+
+        let honBase = valorCausa * (percDecisao / 100);
+        let valCorrigido = honBase * fatorCorrecao;
+
+        let percJurAcumulado = 0;
+        if (dataTransito) {
+            let compTransito = extrairMesAnoDeData(dataTransito);
+            let dataAtuRef = dataAtu || extrairMesAnoDeData(new Date().toISOString().split('T')[0]);
+            let compAtu = normalizaMesAno(dataAtuRef); 
+            let [mTrans, aTrans] = compTransito.split('/').map(Number);
+            let [mAtu, aAtu] = compAtu.split('/').map(Number);
+            let d = new Date(aTrans, mTrans - 1, 1);
+            let fim = new Date(aAtu, mAtu - 1, 1);
+            while (d <= fim) {
+                let mes = String(d.getMonth() + 1).padStart(2, '0');
+                let ano = d.getFullYear();
+                let chave = `${mes}/${ano}`;
+                let idx = indicesEncogeMap[chave];
+                if (idx) {
+                    percJurAcumulado += idx.jur;
+                }
+                d.setMonth(d.getMonth() + 1);
+            }
+        }
+
+        let valJuros = valCorrigido * (percJurAcumulado / 100);
+        let total = valCorrigido + valJuros;
+
+        let linhaUnica = {
+            comp: compAju,
+            fatorCorrecao: fatorCorrecao,
+            valCorrigido: valCorrigido,
+            percJuros: percJurAcumulado,
+            valJuros: valJuros,
+            total: total
+        };
+
+        document.getElementById('memValorCausa').innerText = fmtMoeda(valorCausa);
+        document.getElementById('memPercDecisao').innerText = fmtMoeda(percDecisao) + '%';
+        document.getElementById('memIdDoc').innerText = idDoc;
+        document.getElementById('memHonBase').innerText = fmtMoeda(honBase);
+        document.getElementById('memDataAju').innerText = dataAju.split('-').reverse().join('/');
+        document.getElementById('memFatorCorrecao').innerText = fmtIdx(linhaUnica.fatorCorrecao);
+        document.getElementById('memValCorrigido').innerText = fmtMoeda(linhaUnica.valCorrigido);
+        document.getElementById('memPercJurAcu').innerText = fmtMoeda(linhaUnica.percJuros) + '%';
+        document.getElementById('memJurosAplicados').innerText = fmtMoeda(linhaUnica.valJuros);
+        document.getElementById('memTotalAtualizado').innerText = fmtMoeda(linhaUnica.total);
+
+        let html = `
+            <tr>
+                <td class="center">${linhaUnica.comp}</td>
+                <td>${fmtMoeda(honBase)}</td>
+                <td>${fmtIdx(linhaUnica.fatorCorrecao)}</td>
+                <td>${fmtMoeda(linhaUnica.valCorrigido)}</td>
+                <td>${fmtMoeda(linhaUnica.percJuros)}%</td>
+                <td>${fmtMoeda(linhaUnica.valJuros)}</td>
+                <td style="font-weight:bold">${fmtMoeda(linhaUnica.total)}</td>
+            </tr>
+        `;
+        document.getElementById('bodyHonCausa').innerHTML = html;
+        
+        document.getElementById('footHonCausa').innerHTML = `
+            <tr>
+                <td class="center">TOTAL FINAL</td>
+                <td>-</td>
+                <td>${fmtIdx(linhaUnica.fatorCorrecao)}</td>
+                <td>${fmtMoeda(linhaUnica.valCorrigido)}</td>
+                <td>-</td>
+                <td>${fmtMoeda(linhaUnica.valJuros)}</td>
+                <td style="font-size: 1.1em; color: var(--primary-dark)">${fmtMoeda(linhaUnica.total)}</td>
+            </tr>
+        `;
+
+        honCausaCalculado = {
+            valorCausa: valorCausa,
+            percDecisao: percDecisao,
+            honBase: honBase,
+            dataAju: dataAju,
+            dataTransito: dataTransito,
+            dataAtu: dataAtu,
+            idDoc: idDoc,
+            linha: linhaUnica
+        };
+
+        document.getElementById('resultadoHonCausa').classList.remove('hidden');
+    }
+
+    // --- GERAR PDF (COM CORREÇÃO DA QUEBRA DE PÁGINA) ---
+    function prepararEImprimir() {
+        let incluirPrincipal = document.getElementById('incluirPrincipal').checked;
+        let incluirHonorarios = document.getElementById('incluirHonorarios').checked;
+        let incluirOutrosPDF = document.getElementById('incluirOutros').checked;
+
+        if (!incluirPrincipal && !incluirHonorarios && !incluirOutrosPDF) {
+            alert('Selecione pelo menos uma seção para gerar o PDF.');
+            return;
+        }
+
+        if (incluirPrincipal) {
+            calcularAtualizacao();
+        }
+        if (incluirHonorarios && !honCausaCalculado) {
+            calcularHonCausa();
+        }
+
+        const printArea = document.getElementById('printArea');
+        const hoje = new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+        
+        let assunto = document.getElementById('procAssunto').value.trim();
+        let tituloRelatorio = 'Relatório de Cálculo Judicial';
+        if (assunto) {
+            tituloRelatorio += `: ${assunto}`;
+        }
+
+        let obsTexto = document.getElementById('obsCalculo').value.trim();
+        let obsHtml = obsTexto ? `<div style="font-size: 11pt; margin-top: 10px;"><strong>Observações:</strong> ${obsTexto}</div>` : '';
+
+        let textoLivreRaw = document.getElementById('textoLivre').value.trim();
+        let fontSize = document.getElementById('fontSizeSelect').value;
+        let textoLivreHtml = '';
+        if (textoLivreRaw) {
+            textoLivreHtml = `<div class="print-texto-livre" style="font-size: ${fontSize}pt; line-height: 1.6; margin: 15px 0;">${textoLivreRaw.replace(/\n/g, '<br>')}</div>`;
+        }
+        
+        let html = `
+            <div class="print-header-box">
+                <h1>${tituloRelatorio}</h1>
+                <div class="print-params">
+                    <div><strong>Processo:</strong> ${document.getElementById('procNumero').value || '-'}</div>
+                    <div><strong>Parte Autora:</strong> ${document.getElementById('procAutor').value || '-'}</div>
+                    <div><strong>Réu:</strong> ${document.getElementById('procReu').value || '-'}</div>
+                    <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #ddd;">
+                        <strong>Ajuizamento:</strong> ${document.getElementById('dataAjuizamento').value.split('-').reverse().join('/') || '-'} &nbsp;&nbsp;|&nbsp;&nbsp; 
+                        <strong>Citação:</strong> ${document.getElementById('dataCitacao').value || '-'} &nbsp;&nbsp;|&nbsp;&nbsp; 
+                        <strong>Atualização:</strong> ${document.getElementById('dataAtualizacao').value || '-'}
+                    </div>
+                </div>
+                ${obsHtml}
+            </div>
+        `;
+
+        if (textoLivreHtml) {
+            html += textoLivreHtml;
+        }
+
+        let primeiraSecao = true; // controla quebra de página
+
+        // --- SEÇÃO CÁLCULO PRINCIPAL ---
+        if (incluirPrincipal) {
+            primeiraSecao = false;
+            html += `<h3 style="font-size: 12pt; color: var(--primary-dark); border-bottom: 1px solid #ccc;">Demonstrativo de Atualização</h3>`;
+            
+            let tblCorrecao = document.getElementById('tblCorrecao').cloneNode(true);
+            let tfoot = tblCorrecao.querySelector('tfoot');
+            if (tfoot) tfoot.remove();
+            
+            let inputsFrac = tblCorrecao.querySelectorAll('input.input-frac');
+            inputsFrac.forEach(inp => {
+                let val = inp.value;
+                let span = document.createElement('span');
+                span.innerText = val + '%';
+                inp.parentNode.replaceChild(span, inp);
+            });
+            html += tblCorrecao.outerHTML;
+
+            const footCells = document.querySelectorAll('#footCorrecao td');
+            const tDev  = footCells[1]?.innerText  || '-';
+            const tRec  = footCells[2]?.innerText  || '-';
+            const tDif  = footCells[3]?.innerText  || '-';
+            const tAtu  = footCells[7]?.innerText  || '-';
+            const tJur  = footCells[9]?.innerText  || '-';
+            const tSel  = footCells[11]?.innerText || '-';
+            const tGeral = footCells[12]?.innerText || '-';
+
+            html += `
+                <div class="print-totais-line">
+                    <div class="total-item"><span>Devido</span><strong>${tDev}</strong></div>
+                    <div class="total-item"><span>Recebido</span><strong>${tRec}</strong></div>
+                    <div class="total-item"><span>Diferença</span><strong>${tDif}</strong></div>
+                    <div class="total-item"><span>Atualizado</span><strong>${tAtu}</strong></div>
+                    <div class="total-item"><span>Juros</span><strong>${tJur}</strong></div>
+                    <div class="total-item"><span>SELIC</span><strong>${tSel}</strong></div>
+                    <div class="total-item total-destaque"><span>Soma Lançamentos</span><strong>${tGeral}</strong></div>
+                </div>
+            `;
+
+            let htmlResumo = `
+                <h3 style="font-size: 12pt; color: var(--primary-dark); margin-top: 20px; border-bottom: 1px solid #ccc; page-break-before: auto;">Resumo Financeiro Final</h3>
+                <div class="print-summary-grid">
+                    <div class="print-card">
+                        <div class="print-card-header">1. Valor da Parte Autora (${document.getElementById('resAutPerc').innerText})</div>
+                        <div>Principal: ${document.getElementById('resAutPrin').innerText}</div>
+                        <div>Juros Mora: ${document.getElementById('resAutJur').innerText}</div>
+                        <div>SELIC: ${document.getElementById('resAutSel').innerText}</div>
+                        <div style="font-weight:bold; margin-top:5px;">Total: ${document.getElementById('resAutTot').innerText}</div>
+                    </div>
+            `;
+            
+            let chkContratuais = document.getElementById('chkHonContratuais').checked;
+            if (chkContratuais && !document.getElementById('cardContratuais').classList.contains('hidden')) {
+                htmlResumo += `
+                    <div class="print-card">
+                        <div class="print-card-header">2. Hon. Contratuais (${document.getElementById('resContPerc').innerText})</div>
+                        <div>Principal: ${document.getElementById('resContPrin').innerText}</div>
+                        <div>Juros Mora: ${document.getElementById('resContJur').innerText}</div>
+                        <div>SELIC: ${document.getElementById('resContSel').innerText}</div>
+                        <div style="font-weight:bold; margin-top:5px;">Total: ${document.getElementById('resContTot').innerText}</div>
+                    </div>
+                `;
+            }
+            
+            let chkSucumbenciais = document.getElementById('chkHonSucumbenciais').checked;
+            if (chkSucumbenciais && !document.getElementById('cardSucumbencia').classList.contains('hidden')) {
+                let infoSuc = document.getElementById('infoMajoracao').innerText;
+                htmlResumo += `
+                    <div class="print-card">
+                        <div class="print-card-header">3. Hon. Sucumbência (${document.getElementById('resSucPerc').innerText})</div>
+                        <div style="font-size:8pt; color:#666; white-space:pre-wrap;">${infoSuc}</div>
+                        <div>Principal: ${document.getElementById('resSucPrin').innerText}</div>
+                        <div>Juros Mora: ${document.getElementById('resSucJur').innerText}</div>
+                        <div>SELIC: ${document.getElementById('resSucSel').innerText}</div>
+                        <div style="font-weight:bold; margin-top:5px;">Total: ${document.getElementById('resSucTot').innerText}</div>
+                    </div>
+                `;
+            }
+
+            let incluirOutrosNoPrincipal = document.getElementById('incluirOutrosNoPrincipal').checked;
+            if (incluirOutrosNoPrincipal && !document.getElementById('cardOutrosValores').classList.contains('hidden')) {
+                let tituloOutros = document.getElementById('tituloOutros').value || 'Outros Valores';
+                htmlResumo += `
+                    <div class="print-card">
+                        <div class="print-card-header">4. ${tituloOutros}</div>
+                        <div style="color:var(--success)">Valores Somados: ${document.getElementById('resOutrosSomar').innerText}</div>
+                        <div style="color:var(--danger)">Valores Abatidos: ${document.getElementById('resOutrosAbater').innerText}</div>
+                        <div style="font-weight:bold; margin-top:5px;">${document.getElementById('subtituloOutros').value || 'Saldo Outros'}: ${document.getElementById('resOutrosTotal').innerText}</div>
+                    </div>
+                `;
+            }
+            
+            htmlResumo += `</div>`;
+            html += htmlResumo;
+
+            if (incluirOutrosNoPrincipal && outrosValores.length > 0) {
+                let tituloOutros = document.getElementById('tituloOutros').value || 'Outros Valores';
+                html += `<h3 style="font-size: 12pt; color: var(--primary-dark); margin-top: 20px; border-bottom: 1px solid #ccc;">Detalhamento - ${tituloOutros}</h3>`;
+                html += `<table style="width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 20px;">
+                    <thead>
+                        <tr><th>Descrição</th><th class="center">V. Original</th><th class="center">Data-base</th><th class="center">Data Final</th><th class="center">Fator</th><th class="center">V. Corrigido</th><th class="center">% Juros</th><th class="center">V. Juros</th><th class="center">Operação</th><th class="center">V. Final</th></tr>
+                    </thead>
+                    <tbody>`;
+                outrosValores.forEach(l => {
+                    html += `<tr>
+                        <td style="text-align:left;">${l.descricao}</td>
+                        <td class="center">${fmtMoeda(l.valorOriginal)}</td>
+                        <td class="center">${l.dataBase}</td>
+                        <td class="center">${l.dataFinal}</td>
+                        <td class="center">${fmtIdx(l.fatorAplicado)}</td>
+                        <td class="center">${fmtMoeda(l.valCorrigido)}</td>
+                        <td class="center">${fmtMoeda(l.percentualJuros)}%</td>
+                        <td class="center">${fmtMoeda(l.valorJuros)}</td>
+                        <td class="center">${l.operacao}</td>
+                        <td style="font-weight:bold;">${fmtMoeda(l.valorFinal)}</td>
+                    </tr>`;
+                });
+                html += `</tbody></table>`;
+            }
+
+            html += `
+                <div class="print-total-geral">TOTAL LÍQUIDO GERAL DA CONDENAÇÃO: ${document.getElementById('resTotalGeral').innerText}</div>
+            `;
+        }
+
+        // --- SEÇÃO HONORÁRIOS SOBRE VALOR DA CAUSA ---
+        if (incluirHonorarios && honCausaCalculado) {
+            if (primeiraSecao) {
+                primeiraSecao = false;
+            } else {
+                html += `<div style="page-break-before: always;"></div>`;
+            }
+            let l = honCausaCalculado.linha;
+            html += `
+                <div class="print-hon-causa">
+                    <h3 style="font-size: 12pt; color: var(--primary-dark);">HONORÁRIOS SOBRE VALOR DA CAUSA</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; font-size: 10pt;">
+                        <div><strong>Valor da Causa:</strong> ${fmtMoeda(honCausaCalculado.valorCausa)}</div>
+                        <div><strong>Percentual da Decisão:</strong> ${fmtMoeda(honCausaCalculado.percDecisao)}%</div>
+                        <div><strong>ID do Documento:</strong> ${honCausaCalculado.idDoc || '-'}</div>
+                        <div><strong>Honorário Base:</strong> ${fmtMoeda(honCausaCalculado.honBase)}</div>
+                        <div><strong>Data do Ajuizamento:</strong> ${honCausaCalculado.dataAju.split('-').reverse().join('/')}</div>
+                        <div><strong>Data do Trânsito em Julgado:</strong> ${honCausaCalculado.dataTransito ? honCausaCalculado.dataTransito.split('-').reverse().join('/') : '-'}</div>
+                        <div><strong>Data da Atualização:</strong> ${honCausaCalculado.dataAtu || '-'}</div>
+                    </div>
+                    
+                    <div class="print-hon-memoria">
+                        <table style="width: 100%; margin-bottom: 0; font-size: 10pt;">
+                            <thead>
+                                <tr>
+                                    <th>Data-base</th>
+                                    <th>Valor Base</th>
+                                    <th>Fator Correção</th>
+                                    <th>Valor Corrigido</th>
+                                    <th>% Juros (Acum.)</th>
+                                    <th>R$ Juros</th>
+                                    <th>Total (R$)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="center">${l.comp}</td>
+                                    <td>${fmtMoeda(honCausaCalculado.honBase)}</td>
+                                    <td>${fmtIdx(l.fatorCorrecao)}</td>
+                                    <td>${fmtMoeda(l.valCorrigido)}</td>
+                                    <td>${fmtMoeda(l.percJuros)}%</td>
+                                    <td>${fmtMoeda(l.valJuros)}</td>
+                                    <td style="font-weight:bold">${fmtMoeda(l.total)}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot style="font-weight: bold; background: var(--salmon-soft);">
+                                <tr>
+                                    <td class="center">TOTAL FINAL</td>
+                                    <td>-</td>
+                                    <td>${fmtIdx(l.fatorCorrecao)}</td>
+                                    <td>${fmtMoeda(l.valCorrigido)}</td>
+                                    <td>-</td>
+                                    <td>${fmtMoeda(l.valJuros)}</td>
+                                    <td style="font-size: 12pt; color: var(--primary-dark)">${fmtMoeda(l.total)}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    
+                    <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; font-size: 10pt; border: 1px solid #ccc; padding: 10px; border-radius: 4px;">
+                        <div><strong>Correção Monetária Aplicada:</strong> ${fmtMoeda(l.valCorrigido - honCausaCalculado.honBase)}</div>
+                        <div><strong>Juros de Mora Aplicados:</strong> ${fmtMoeda(l.valJuros)}</div>
+                        <div style="font-weight: bold; color: var(--primary-dark);"><strong>TOTAL ATUALIZADO:</strong> ${fmtMoeda(l.total)}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- SEÇÃO OUTROS VALORES (individual) com correção da quebra de página ---
+        if (incluirOutrosPDF && outrosValores.length > 0) {
+            // Se for a primeira seção, não coloca quebra; senão, coloca
+            if (!primeiraSecao) {
+                html += `<div style="page-break-before: always;"></div>`;
+            }
+            primeiraSecao = false;
+
+            let tituloOutros = document.getElementById('tituloOutros').value || 'OUTROS VALORES (Lançamentos Individuais)';
+            let subtituloOutros = document.getElementById('subtituloOutros').value || 'SALDO TOTAL DOS OUTROS VALORES';
+            html += `
+                <div>
+                    <h3 style="font-size: 12pt; color: var(--primary-dark);">${tituloOutros}</h3>
+                    <p style="font-size: 10pt;">Valores corrigidos monetariamente (fator entre data-base e data-final) e com juros específicos por lançamento.</p>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 10pt;">
+                        <thead>
+                            <tr><th>Descrição</th><th class="center">V. Original</th><th class="center">Data-base</th><th class="center">Data Final</th><th class="center">Fator</th><th class="center">V. Corrigido</th><th class="center">% Juros</th><th class="center">V. Juros</th><th class="center">Operação</th><th class="center">V. Final</th></tr>
+                        </thead>
+                        <tbody>`;
+            outrosValores.forEach(l => {
+                html += `<tr>
+                    <td style="text-align:left;">${l.descricao}</td>
+                    <td class="center">${fmtMoeda(l.valorOriginal)}</td>
+                    <td class="center">${l.dataBase}</td>
+                    <td class="center">${l.dataFinal}</td>
+                    <td class="center">${fmtIdx(l.fatorAplicado)}</td>
+                    <td class="center">${fmtMoeda(l.valCorrigido)}</td>
+                    <td class="center">${fmtMoeda(l.percentualJuros)}%</td>
+                    <td class="center">${fmtMoeda(l.valorJuros)}</td>
+                    <td class="center">${l.operacao}</td>
+                    <td style="font-weight:bold;">${fmtMoeda(l.valorFinal)}</td>
+                </tr>`;
+            });
+            html += `</tbody></table>`;
+            let somaOutros = 0;
+            outrosValores.forEach(l => {
+                let vFinal = l.valorFinal || l.valCorrigido || 0;
+                if (l.operacao === 'SOMAR') somaOutros += vFinal;
+                else somaOutros -= vFinal;
+            });
+            html += `<div style="margin-top: 10px; font-weight: bold; text-align: right; font-size: 12pt;">${subtituloOutros}: ${fmtMoeda(somaOutros)}</div>`;
+            let obsOutros = document.getElementById('obsOutrosValores').value.trim();
+            if (obsOutros) {
+                html += `<div style="margin-top: 10px; font-size: 10pt;"><strong>Observações:</strong> ${obsOutros}</div>`;
+            }
+            html += `</div>`;
+        }
+
+        let obsFinais = document.getElementById('obsFinais').value;
+        if (obsFinais.trim() && incluirPrincipal) {
+            html += `<div style="margin-top: 20px; font-size: 10pt; page-break-inside: avoid;"><strong>Observações Finais:</strong><br>${obsFinais.replace(/\n/g, '<br>')}</div>`;
+        }
+
+        html += `<div class="print-footer">Relatório emitido em ${hoje}.</div>`;
+
+        printArea.innerHTML = html;
+
+        let aut = document.getElementById('procAutor').value.trim();
+        let proc = document.getElementById('procNumero').value.replace(/\D/g, '').substring(0, 6);
+        let nomeAuto = aut ? aut.split(/\s+/).slice(0,2).join('_').replace(/[^a-zA-ZÀ-ÿ_]/g, '').toUpperCase() : 'NOME';
+        let numProc = proc ? proc : '000000';
+        let d = new Date();
+        let ds = `${String(d.getDate()).padStart(2,'0')}${String(d.getMonth()+1).padStart(2,'0')}${d.getFullYear()}_${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}${String(d.getSeconds()).padStart(2,'0')}`;
+        
+        let pdfFilename = `CALC_${nomeAuto}_${numProc}_${ds}`;
+        let originalTitle = document.title;
+        
+        document.title = pdfFilename;
+
+        window.print();
+
+        document.title = originalTitle;
+    }
+
+    // --- SALVAR JSON ---
+    function salvarJSON() {
+        let aut = document.getElementById('procAutor').value.trim();
+        let proc = document.getElementById('procNumero').value.replace(/\D/g, '').substring(0, 6);
+        
+        let nomeAuto = aut ? aut.split(/\s+/).slice(0,2).join('_').replace(/[^a-zA-ZÀ-ÿ_]/g, '').toUpperCase() : 'NOME';
+        let numProc = proc ? proc : '000000';
+        
+        let d = new Date();
+        let ds = `${String(d.getDate()).padStart(2,'0')}${String(d.getMonth()+1).padStart(2,'0')}${d.getFullYear()}_${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}${String(d.getSeconds()).padStart(2,'0')}`;
+        let filename = `CALC_${nomeAuto}_${numProc}_${ds}.json`;
+
+        let projeto = {
+            meta: {
+                proc: document.getElementById('procNumero').value,
+                ass: document.getElementById('procAssunto').value,
+                aut: document.getElementById('procAutor').value,
+                reu: document.getElementById('procReu').value,
+                aju: document.getElementById('dataAjuizamento').value,
+                cit: document.getElementById('dataCitacao').value,
+                atu: document.getElementById('dataAtualizacao').value,
+                apPre: document.getElementById('aplicaPrescricao').value,
+                anPre: document.getElementById('anosPresc').value,
+                dtInD: document.getElementById('dataInicioDif').value,
+                chkHonCon: document.getElementById('chkHonContratuais').checked,
+                chkHonSuc: document.getElementById('chkHonSucumbenciais').checked,
+                hCon: document.getElementById('honContratuais').value,
+                hSuc: document.getElementById('honSucumbencia').value,
+                dtLimSuc: document.getElementById('dataLimiteSucumbencia').value,
+                idSuc: document.getElementById('idDocSucumb').value,
+                hMaj: document.getElementById('honMajoracao').value,
+                idMaj: document.getElementById('idDocMajoracao').value,
+                tMaj: document.getElementById('tipoMajoracao').value,
+                obs: document.getElementById('obsCalculo').value,
+                obsF: document.getElementById('obsFinais').value,
+                notas: document.getElementById('notasInternas').value,
+                apFra: document.getElementById('aplicaFracao').value,
+                fraG: document.getElementById('fracaoGlobal').value,
+                rawIdx: document.getElementById('rawIndices').value,
+                valCau: document.getElementById('valorCausa').value,
+                percDec: document.getElementById('percDecisao').value,
+                idDocHon: document.getElementById('idDocHonCausa').value,
+                dtAjuHon: document.getElementById('dataAjuizamentoHonCausa').value,
+                dtTraHon: document.getElementById('dataTransitoHonCausa').value,
+                dtAtuHon: document.getElementById('dataAtualizacaoHonCausa').value,
+                rawIdxEnc: document.getElementById('rawIndicesEncoge').value,
+                rawIdxOut: document.getElementById('rawIndicesOutros').value,
+                incluirOutrosNoPrincipal: document.getElementById('incluirOutrosNoPrincipal').checked,
+                obsOutros: document.getElementById('obsOutrosValores').value,
+                tituloOutros: document.getElementById('tituloOutros').value,
+                subtituloOutros: document.getElementById('subtituloOutros').value,
+                textoLivre: document.getElementById('textoLivre').value,
+                fontSize: document.getElementById('fontSizeSelect').value,
+                chkSucumbenciaIncluiGuia5: document.getElementById('chkSucumbenciaIncluiGuia5').checked
+            },
+            lancamentos: lancamentos,
+            outrosValores: outrosValores,
+            honCausa: honCausaCalculado
+        };
+
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([JSON.stringify(projeto)], {type: 'application/json'}));
+        a.download = filename;
+        a.click();
+    }
+
+    // --- CARREGAR JSON ---
+    function carregarJSON(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                let j = JSON.parse(e.target.result);
+                if(j.meta) {
+                    document.getElementById('procNumero').value = j.meta.proc || '';
+                    document.getElementById('procAssunto').value = j.meta.ass || '';
+                    document.getElementById('procAutor').value = j.meta.aut || '';
+                    document.getElementById('procReu').value = j.meta.reu || '';
+                    document.getElementById('dataAjuizamento').value = j.meta.aju || '';
+                    document.getElementById('dataCitacao').value = j.meta.cit || '';
+                    document.getElementById('dataAtualizacao').value = j.meta.atu || '';
+                    document.getElementById('aplicaPrescricao').value = j.meta.apPre || 'S';
+                    document.getElementById('anosPresc').value = j.meta.anPre || '5';
+                    document.getElementById('dataInicioDif').value = j.meta.dtInD || '';
+                    
+                    document.getElementById('chkHonContratuais').checked = j.meta.chkHonCon || false;
+                    document.getElementById('chkHonSucumbenciais').checked = j.meta.chkHonSuc || false;
+                    
+                    document.getElementById('honContratuais').value = j.meta.hCon || '20,00';
+                    document.getElementById('honSucumbencia').value = j.meta.hSuc || '0,00';
+                    
+                    document.getElementById('dataLimiteSucumbencia').value = j.meta.dtLimSuc || '';
+                    
+                    document.getElementById('idDocSucumb').value = j.meta.idSuc || '';
+                    document.getElementById('honMajoracao').value = j.meta.hMaj || '0,00';
+                    document.getElementById('idDocMajoracao').value = j.meta.idMaj || '';
+                    document.getElementById('tipoMajoracao').value = j.meta.tMaj || 'aditiva';
+                    document.getElementById('obsCalculo').value = j.meta.obs || '';
+                    document.getElementById('obsFinais').value = j.meta.obsF || '';
+                    document.getElementById('notasInternas').value = j.meta.notas || '';
+                    document.getElementById('aplicaFracao').value = j.meta.apFra || 'N';
+                    document.getElementById('fracaoGlobal').value = j.meta.fraG || '100,00';
+                    
+                    if(j.meta.rawIdx) {
+                        document.getElementById('rawIndices').value = j.meta.rawIdx;
+                        processarTxtIndices(j.meta.rawIdx);
+                    }
+                    
+                    document.getElementById('valorCausa').value = j.meta.valCau || '0,00';
+                    document.getElementById('percDecisao').value = j.meta.percDec || '0,00';
+                    document.getElementById('idDocHonCausa').value = j.meta.idDocHon || '';
+                    document.getElementById('dataAjuizamentoHonCausa').value = j.meta.dtAjuHon || '';
+                    document.getElementById('dataTransitoHonCausa').value = j.meta.dtTraHon || '';
+                    document.getElementById('dataAtualizacaoHonCausa').value = j.meta.dtAtuHon || '';
+                    
+                    if(j.meta.rawIdxEnc) {
+                        document.getElementById('rawIndicesEncoge').value = j.meta.rawIdxEnc;
+                        processarTxtIndicesEncoge(j.meta.rawIdxEnc);
+                    }
+                    if(j.meta.rawIdxOut) {
+                        document.getElementById('rawIndicesOutros').value = j.meta.rawIdxOut;
+                        processarTxtIndicesOutros(j.meta.rawIdxOut);
+                    }
+                    
+                    if (j.meta.incluirOutrosNoPrincipal !== undefined) {
+                        document.getElementById('incluirOutrosNoPrincipal').checked = j.meta.incluirOutrosNoPrincipal;
+                    }
+                    if (j.meta.obsOutros !== undefined) {
+                        document.getElementById('obsOutrosValores').value = j.meta.obsOutros;
+                    }
+                    if (j.meta.tituloOutros !== undefined) {
+                        document.getElementById('tituloOutros').value = j.meta.tituloOutros;
+                    }
+                    if (j.meta.subtituloOutros !== undefined) {
+                        document.getElementById('subtituloOutros').value = j.meta.subtituloOutros;
+                    }
+                    if (j.meta.textoLivre !== undefined) {
+                        document.getElementById('textoLivre').value = j.meta.textoLivre;
+                    }
+                    if (j.meta.fontSize !== undefined) {
+                        document.getElementById('fontSizeSelect').value = j.meta.fontSize;
+                        alterarFonte();
+                    }
+                    document.getElementById('chkSucumbenciaIncluiGuia5').checked = j.meta.chkSucumbenciaIncluiGuia5 || false;
+                }
+                lancamentos = j.lancamentos || [];
+                outrosValores = j.outrosValores || [];
+
+                outrosValores.forEach(l => {
+                    if (l.percentualJuros === undefined) l.percentualJuros = 0;
+                    if (l.valorJuros === undefined) {
+                        l.valorJuros = 0;
+                        l.valorFinal = l.valCorrigido || 0;
+                    }
+                    if (l.valorFinal === undefined) {
+                        l.valorFinal = l.valCorrigido || 0;
+                    }
+                });
+                
+                if (j.honCausa) {
+                    honCausaCalculado = j.honCausa;
+                }
+                
+                togglePrescricao();
+                toggleHonContratuais();
+                toggleHonSucumbenciais();
+                toggleMajoração();
+                toggleFracao();
+                renderLancamentos();
+                renderOutrosValores();
+                document.getElementById('resultadoTela').classList.add('hidden');
+                
+                if (honCausaCalculado) {
+                    document.getElementById('resultadoHonCausa').classList.remove('hidden');
+                    let l = honCausaCalculado.linha;
+                    
+                    document.getElementById('memValorCausa').innerText = fmtMoeda(honCausaCalculado.valorCausa);
+                    document.getElementById('memPercDecisao').innerText = fmtMoeda(honCausaCalculado.percDecisao) + '%';
+                    document.getElementById('memIdDoc').innerText = honCausaCalculado.idDoc || '-';
+                    document.getElementById('memHonBase').innerText = fmtMoeda(honCausaCalculado.honBase);
+                    document.getElementById('memDataAju').innerText = honCausaCalculado.dataAju.split('-').reverse().join('/');
+                    document.getElementById('memFatorCorrecao').innerText = fmtIdx(l.fatorCorrecao);
+                    document.getElementById('memValCorrigido').innerText = fmtMoeda(l.valCorrigido);
+                    document.getElementById('memPercJurAcu').innerText = fmtMoeda(l.percJuros) + '%';
+                    document.getElementById('memJurosAplicados').innerText = fmtMoeda(l.valJuros);
+                    document.getElementById('memTotalAtualizado').innerText = fmtMoeda(l.total);
+                    
+                    let html = `
+                        <tr>
+                            <td class="center">${l.comp}</td>
+                            <td>${fmtMoeda(honCausaCalculado.honBase)}</td>
+                            <td>${fmtIdx(l.fatorCorrecao)}</td>
+                            <td>${fmtMoeda(l.valCorrigido)}</td>
+                            <td>${fmtMoeda(l.percJuros)}%</td>
+                            <td>${fmtMoeda(l.valJuros)}</td>
+                            <td style="font-weight:bold">${fmtMoeda(l.total)}</td>
+                        </tr>
+                    `;
+                    document.getElementById('bodyHonCausa').innerHTML = html;
+                    document.getElementById('footHonCausa').innerHTML = `
+                        <tr>
+                            <td class="center">TOTAL FINAL</td>
+                            <td>-</td>
+                            <td>${fmtIdx(l.fatorCorrecao)}</td>
+                            <td>${fmtMoeda(l.valCorrigido)}</td>
+                            <td>-</td>
+                            <td>${fmtMoeda(l.valJuros)}</td>
+                            <td style="font-size: 1.1em; color: var(--primary-dark)">${fmtMoeda(l.total)}</td>
+                        </tr>
+                    `;
+                }
+                atualizarTituloOutrosCard();
+                atualizarSaldoGuia5Exibido();
+                alert("Projeto carregado com sucesso!");
+            } catch (err) {
+                alert("Erro ao ler arquivo. JSON inválido.");
+            }
+        };
+        reader.readAsText(file);
+        input.value = '';
+    }
+
+    // --- NOVO CÁLCULO ---
+    function novoCalculo() {
+        if(!confirm("Apagar todos os dados atuais e iniciar novo cálculo?")) return;
+        document.querySelectorAll('#appContainer input:not([type="button"]):not([type="file"]):not([type="checkbox"]), #appContainer textarea').forEach(el => el.value = '');
+        
+        document.getElementById('chkHonContratuais').checked = false;
+        document.getElementById('chkHonSucumbenciais').checked = false;
+        document.getElementById('chkSucumbenciaIncluiGuia5').checked = false;
+        
+        document.getElementById('honContratuais').value = '20,00';
+        document.getElementById('honSucumbencia').value = '0,00';
+        document.getElementById('honMajoracao').value = '0,00';
+        document.getElementById('anosPresc').value = '5';
+        document.getElementById('aplicaPrescricao').value = 'S';
+        document.getElementById('aplicaFracao').value = 'N';
+        document.getElementById('fracaoGlobal').value = '100,00';
+        
+        document.getElementById('valorCausa').value = '0,00';
+        document.getElementById('percDecisao').value = '0,00';
+        document.getElementById('dataLimiteSucumbencia').value = '';
+        document.getElementById('incluirOutrosNoPrincipal').checked = true;
+        document.getElementById('tituloOutros').value = 'OUTROS VALORES (Lançamentos Individuais)';
+        document.getElementById('subtituloOutros').value = 'SALDO TOTAL DOS OUTROS VALORES';
+        document.getElementById('textoLivre').value = '';
+        document.getElementById('fontSizeSelect').value = '12';
+        alterarFonte();
+        
+        lancamentos = [];
+        outrosValores = [];
+        indicesMap = {};
+        indicesEncogeMap = {};
+        indicesOutrosMap = {};
+        honCausaCalculado = null;
+        
+        togglePrescricao();
+        toggleHonContratuais();
+        toggleHonSucumbenciais();
+        toggleMajoração();
+        toggleFracao();
+        renderLancamentos();
+        renderOutrosValores();
+        document.getElementById('resultadoTela').classList.add('hidden');
+        document.getElementById('resultadoHonCausa').classList.add('hidden');
+        atualizarTituloOutrosCard();
+        atualizarSaldoGuia5Exibido();
+    }
+</script>
+</body>
+</html>
