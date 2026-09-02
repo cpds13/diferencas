@@ -362,51 +362,6 @@
                 border-top: 1px solid #ddd;
                 padding-top: 15px;
             }
-
-            .print-laudo-document {
-                page-break-before: always;
-                page-break-inside: auto;
-                font-size: 11.5pt;
-                line-height: 1.65;
-            }
-            .print-laudo-document .print-laudo-header {
-                border-bottom: 2px solid var(--primary);
-                padding-bottom: 10px;
-                margin-bottom: 20px;
-            }
-            .print-laudo-document .print-laudo-header h2 {
-                margin: 0 0 10px 0;
-                color: var(--primary-dark);
-                border-left: 6px solid var(--primary);
-                padding-left: 12px;
-                font-size: 17pt;
-            }
-            .print-laudo-document .print-laudo-meta {
-                font-size: 10pt;
-                line-height: 1.55;
-                color: #333;
-            }
-            .print-laudo-document .print-laudo-body {
-                border: 1px solid #ddd;
-                padding: 14px 16px;
-                background: #fff;
-            }
-            .print-laudo-document .print-laudo-body h1,
-            .print-laudo-document .print-laudo-body h2,
-            .print-laudo-document .print-laudo-body h3 {
-                page-break-after: avoid;
-            }
-            .print-laudo-document .print-laudo-body table {
-                page-break-inside: auto;
-            }
-            .print-laudo-document .print-laudo-body tr {
-                page-break-inside: avoid;
-            }
-            .print-laudo-document .print-laudo-empty {
-                color: #777;
-                font-style: italic;
-                padding: 20px 0;
-            }
         }
 
         #infoMajoracao {
@@ -415,125 +370,7 @@
         #sucumbenciaDetalhesExtra .card-row.sub {
             font-size: 0.9em;
         }
-    
-/* =========================================================
-   CONTADJUS — EDITOR DE LAUDOS INTEGRADO
-   Escopo visual: #tab6. Não altera o motor de cálculos.
-   ========================================================= */
-#tab6 .laudo-editor-shell{margin-top:18px}
-#tab6 .laudo-context{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:10px 12px;margin-bottom:10px;background:var(--bg-main);
-  border:1px solid var(--border-main);border-radius:7px;color:var(--text-secondary);
-  font-size:.86em
-}
-#tab6 .laudo-context strong{color:var(--primary-dark)}
-#tab6 .laudo-toolbar{
-  position:sticky;top:0;z-index:900;display:flex;flex-wrap:wrap;gap:6px;
-  align-items:center;padding:8px;background:#f3f5f7;border:1px solid var(--border-main);
-  border-radius:8px 8px 0 0;box-shadow:0 2px 8px rgba(0,0,0,.08)
-}
-#tab6 .laudo-tool-group{
-  display:flex;align-items:center;gap:4px;padding:4px 5px;
-  background:#fff;border:1px solid #d9dee7;border-radius:7px
-}
-#tab6 .laudo-tool-group-label{
-  font-size:10px;font-weight:800;color:var(--text-secondary);
-  text-transform:uppercase;letter-spacing:.35px;padding:0 5px 0 2px;
-  border-right:1px solid #d9dee7;margin-right:1px
-}
-#tab6 .laudo-tool{
-  min-width:34px;height:32px;padding:5px 8px!important;
-  border:1px solid transparent!important;background:#fff!important;color:var(--text-main)!important;
-  border-radius:5px!important;font-weight:700!important;cursor:pointer;
-  display:inline-flex;align-items:center;justify-content:center;
-  transition:background .15s,border-color .15s,transform .08s
-}
-#tab6 .laudo-tool:hover{background:var(--salmon-soft)!important;border-color:var(--border-accent)!important}
-#tab6 .laudo-tool:active{transform:translateY(1px)}
-#tab6 .laudo-tool.active{background:var(--primary)!important;color:#fff!important;border-color:var(--primary)!important}
-#tab6 .laudo-tool[aria-pressed="true"]{background:var(--primary)!important;color:#fff!important}
-#tab6 .laudo-tool .ico{font-size:16px;line-height:1}
-#tab6 .laudo-tool.text-tool{font-size:12px}
-#tab6 .laudo-select{
-  height:32px!important;width:auto!important;min-width:82px;padding:5px 8px!important;
-  border:1px solid #d9dee7!important;border-radius:5px!important;background:#fff!important;
-  color:var(--text-main)!important;font-size:12px!important
-}
-#tab6 .laudo-color{
-  width:34px!important;height:32px!important;padding:2px!important;border:1px solid #d9dee7!important;
-  border-radius:5px!important;cursor:pointer
-}
-#tab6 .laudo-sep{width:1px;height:24px;background:#d9dee7;margin:0 2px}
-#tab6 .laudo-status{
-  margin-left:auto;font-size:11px;color:var(--text-secondary);white-space:nowrap;
-  max-width:230px;overflow:hidden;text-overflow:ellipsis
-}
-#tab6 .laudo-editor{
-  min-height:760px;background:#fff;border:1px solid var(--border-main);border-top:0;
-  border-radius:0 0 8px 8px;padding:38px 52px;outline:none;line-height:1.65;
-  font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--text-main);
-  box-shadow:0 1px 4px rgba(0,0,0,.03)
-}
-#tab6 .laudo-editor:focus{box-shadow:0 0 0 2px rgba(190,80,20,.13)}
-#tab6 .laudo-editor h1{color:var(--primary-dark);font-size:25px;margin:0 0 18px}
-#tab6 .laudo-editor h2{color:var(--primary);font-size:19px;margin:26px 0 10px;border-bottom:2px solid var(--salmon-soft);padding-bottom:6px}
-#tab6 .laudo-editor h3{color:var(--primary-dark);font-size:16px;margin:20px 0 8px}
-#tab6 .laudo-editor p{margin:9px 0}
-#tab6 .laudo-editor blockquote{margin:12px 0;padding:9px 14px;border-left:4px solid var(--primary);background:var(--salmon-soft)}
-#tab6 .laudo-editor ul,#tab6 .laudo-editor ol{margin:8px 0 12px 24px}
-#tab6 .laudo-editor table{border-collapse:collapse;width:100%;margin:14px 0}
-#tab6 .laudo-editor th,#tab6 .laudo-editor td{border:1px solid #cfd4dc;padding:8px 10px;vertical-align:top}
-#tab6 .laudo-editor th{background:#f6e5d8;color:var(--primary-dark)}
-#tab6 .laudo-editor hr.laudo-rule{border:0;border-top:1px solid var(--laudo-line,#cfd6df);margin:20px 0;height:0}
-#tab6 .laudo-editor hr.laudo-rule.selected{outline:2px solid rgba(184,90,22,.25);outline-offset:3px}
-#tab6 .laudo-hidden-source{display:none!important}
-#tab6 .laudo-help{
-  margin:9px 0 0;padding:8px 10px;border:1px dashed var(--border-accent);
-  border-radius:6px;background:var(--salmon-soft);font-size:11px;color:var(--text-secondary)
-}
-#laudoTableModal{display:none;align-items:center;justify-content:center;background:rgba(20,28,40,.48);backdrop-filter:blur(2px)}
-#laudoTableModal.open{display:flex}
-#laudoAppearanceModal,#laudoImportModal{
-  position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;
-  background:rgba(20,28,40,.48);backdrop-filter:blur(2px)
-}
-#laudoAppearanceModal.open,#laudoImportModal.open{display:flex}
-.laudo-modal-card{
-  width:min(680px,calc(100vw - 30px));max-height:86vh;overflow:auto;background:#fff;
-  border:1px solid var(--border-main);border-radius:12px;padding:20px;
-  box-shadow:0 18px 60px rgba(0,0,0,.22)
-}
-.laudo-modal-card h3{margin:0 0 5px;color:var(--primary-dark)}
-.laudo-modal-card .modal-subtitle{margin:0 0 16px;color:var(--text-secondary);font-size:12px}
-.laudo-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
-.laudo-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.laudo-modal-grid label{font-size:12px;font-weight:700;color:var(--text-secondary);display:block;margin:0 0 6px}
-.laudo-modal-grid input,.laudo-modal-grid select{width:100%;height:38px}
-.laudo-swatches{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
-.laudo-swatch{width:30px;height:30px;border-radius:5px;border:2px solid #fff;box-shadow:0 0 0 1px #cbd1da;cursor:pointer}
-#laudoTableModal .laudo-table-modal{
-  width:min(900px,calc(100vw - 30px));max-height:88vh;overflow:auto;background:#fff;
-  border:1px solid #d9dee7;border-radius:12px;box-shadow:0 18px 60px rgba(0,0,0,.22);padding:20px
-}
-#laudoTablePreview{width:100%;border-collapse:collapse}
-#laudoTablePreview th,#laudoTablePreview td{border:1px solid #d9dee7;padding:8px 10px;vertical-align:top}
-#laudoTablePreview th{background:#f3f5f7;color:var(--primary-dark)}
-#laudoTablePreview td[contenteditable=true],#laudoTablePreview th[contenteditable=true]{outline:none}
-#laudoTablePreview td[contenteditable=true]:focus,#laudoTablePreview th[contenteditable=true]:focus{box-shadow:inset 0 0 0 2px rgba(184,90,22,.25)}
-@media(max-width:900px){
-  #tab6 .laudo-toolbar{position:relative}
-  #tab6 .laudo-editor{padding:24px 20px}
-  #tab6 .laudo-status{width:100%;margin-left:0}
-  .laudo-modal-grid{grid-template-columns:1fr}
-}
-@media print{
-  #tab6 .laudo-editor{border:0;box-shadow:none;padding:0;min-height:0;font-size:11.5pt}
-  #tab6 .laudo-toolbar,#tab6 .laudo-context,#tab6 .laudo-help{display:none!important}
-}
-
     </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 
@@ -555,7 +392,6 @@
             <label><input type="checkbox" id="incluirPrincipal" checked> Cálculo Principal</label>
             <label><input type="checkbox" id="incluirHonorarios" checked> Honorários (Valor da Causa)</label>
             <label><input type="checkbox" id="incluirOutros" checked> Outros Lançamentos</label>
-            <label><input type="checkbox" id="incluirLaudo" checked> Editor de Laudo (página separada)</label>
         </div>
         
         <button class="btn btn-primary" onclick="prepararEImprimir()">🖨️ Gerar PDF</button>
@@ -587,7 +423,7 @@
         <button class="tab-btn" onclick="openTab('tab3', this)">3. Correção e Relatório</button>
         <button class="tab-btn" onclick="openTab('tab4', this)">4. Honorários sobre Valor da Causa</button>
         <button class="tab-btn" onclick="openTab('tab5', this)">5. Outros Lançamentos</button>
-        <button class="tab-btn" onclick="openTab('tab6', this)">6. Editor de Laudos</button>
+        <button class="tab-btn" onclick="openTab('tab6', this)">6. Informação Textual</button>
     </div>
 
     <div id="tab1" class="tab-content active">
@@ -1036,169 +872,41 @@
         </div>
     </div>
 
-    <!-- ABA 6 - INFORMAÇÃO TEXTUAL / EDITOR DE LAUDOS INTEGRADO -->
+    <!-- ABA 6 - INFORMAÇÃO TEXTUAL -->
     <div id="tab6" class="tab-content">
-        <h2>Editor de Laudos / Informação Textual</h2>
-        <p style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 10px;">
-            Editor visual integrado ao cálculo. Os dados do processo são obtidos diretamente da Aba 1.
-            O conteúdo abaixo permanece separado do motor matemático e é usado apenas para o texto/parecer do relatório.
+        <h2>Informação Textual / Parecer</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 15px;">
+            Escreva um texto descritivo do cálculo (parecer, resumo, fundamentação) que será inserido no PDF, logo após o cabeçalho.<br>
+            Use os botões para formatar (negrito, itálico, sublinhado, cor, quebra de página) e selecione o tamanho da fonte.
         </p>
 
-        <div class="laudo-editor-shell">
-            <div class="laudo-context">
-                <span><strong>Processo:</strong> <span id="laudoCtxProcesso">—</span> &nbsp;|&nbsp;
-                <strong>Autora:</strong> <span id="laudoCtxAutor">—</span> &nbsp;|&nbsp;
-                <strong>Réu:</strong> <span id="laudoCtxReu">—</span></span>
-                <button type="button" class="btn btn-outline" id="laudoAppearanceBtn" style="padding:6px 10px;">Aparência</button>
-            </div>
-
-            <div class="laudo-toolbar" role="toolbar" aria-label="Formatação do laudo">
-                <div class="laudo-tool-group">
-                    <span class="laudo-tool-group-label">Histórico</span>
-                    <button type="button" class="laudo-tool" id="laudoUndo" title="Desfazer (Ctrl+Z)" aria-label="Desfazer">↶</button>
-                    <button type="button" class="laudo-tool" id="laudoRedo" title="Refazer (Ctrl+Y)" aria-label="Refazer">↷</button>
-                </div>
-
-                <div class="laudo-tool-group">
-                    <span class="laudo-tool-group-label">Estilo</span>
-                    <button type="button" class="laudo-tool text-tool laudo-title-btn" data-block="p">Texto</button>
-                    <button type="button" class="laudo-tool text-tool laudo-title-btn" data-block="h1">Título 1</button>
-                    <button type="button" class="laudo-tool text-tool laudo-title-btn" data-block="h2">Título 2</button>
-                    <button type="button" class="laudo-tool text-tool laudo-title-btn" data-block="h3">Título 3</button>
-                </div>
-
-                <div class="laudo-tool-group">
-                    <span class="laudo-tool-group-label">Texto</span>
-                    <button type="button" class="laudo-tool" data-laudo-cmd="bold" title="Negrito (Ctrl+B)"><b>B</b></button>
-                    <button type="button" class="laudo-tool" data-laudo-cmd="italic" title="Itálico (Ctrl+I)"><i>I</i></button>
-                    <button type="button" class="laudo-tool" data-laudo-cmd="underline" title="Sublinhado (Ctrl+U)"><u>U</u></button>
-                    <span class="laudo-sep"></span>
-                    <button type="button" class="laudo-tool" id="laudoFontDown" title="Diminuir fonte">A−</button>
-                    <select id="laudoFontSize" class="laudo-select" title="Tamanho da fonte">
-                        <option value="">Tamanho</option>
-                        <option value="8">8</option><option value="10">10</option><option value="11">11</option>
-                        <option value="12">12</option><option value="13">13</option><option value="14">14</option>
-                        <option value="16">16</option><option value="18">18</option><option value="20">20</option>
-                        <option value="22">22</option><option value="24">24</option><option value="26">26</option>
-                        <option value="28">28</option><option value="30">30</option><option value="32">32</option>
-                        <option value="36">36</option><option value="40">40</option><option value="42">42</option>
-                    </select>
-                    <button type="button" class="laudo-tool" id="laudoFontUp" title="Aumentar fonte">A+</button>
-                    <input type="color" class="laudo-color" id="laudoFontColor" value="#2F3640" title="Cor do texto">
-                </div>
-
-                <div class="laudo-tool-group">
-                    <span class="laudo-tool-group-label">Alinhar</span>
-                    <button type="button" class="laudo-tool" data-laudo-cmd="justifyLeft" title="Esquerda">≡</button>
-                    <button type="button" class="laudo-tool" data-laudo-cmd="justifyCenter" title="Centro">≡</button>
-                    <button type="button" class="laudo-tool" data-laudo-cmd="justifyRight" title="Direita">≡</button>
-                    <button type="button" class="laudo-tool" data-laudo-cmd="justifyFull" title="Justificar">☰</button>
-                </div>
-
-                <div class="laudo-tool-group">
-                    <span class="laudo-tool-group-label">Listas</span>
-                    <button type="button" class="laudo-tool text-tool" data-laudo-cmd="insertUnorderedList" title="Lista com marcadores">• Lista</button>
-                    <button type="button" class="laudo-tool text-tool" data-laudo-cmd="insertOrderedList" title="Lista numerada">1. Lista</button>
-                    <button type="button" class="laudo-tool" data-laudo-cmd="outdent" title="Diminuir recuo">←</button>
-                    <button type="button" class="laudo-tool" data-laudo-cmd="indent" title="Aumentar recuo">→</button>
-                </div>
-
-                <div class="laudo-tool-group">
-                    <span class="laudo-tool-group-label">Inserir</span>
-                    <button type="button" class="laudo-tool text-tool" id="laudoLink">Link</button>
-                    <button type="button" class="laudo-tool text-tool" id="laudoTable">Tabela</button>
-                    <button type="button" class="laudo-tool text-tool" id="laudoConvertTable">Seleção → tabela</button>
-                    <button type="button" class="laudo-tool text-tool" id="laudoLine">Linha</button>
-                    <input type="color" class="laudo-color" id="laudoLineColor" value="#cfd6df" title="Cor da linha">
-                </div>
-
-                <div class="laudo-tool-group">
-                    <span class="laudo-tool-group-label">Ferramentas</span>
-                    <button type="button" class="laudo-tool text-tool" id="laudoImport">Importar</button>
-                    <button type="button" class="laudo-tool text-tool" id="laudoAuto">Organizar</button>
-                    <button type="button" class="laudo-tool text-tool" id="laudoClearFormat">Limpar formatação</button>
-                    <button type="button" class="laudo-tool text-tool" id="laudoPageBreak">↵ Quebra</button>
-                    <button type="button" class="laudo-tool text-tool" id="laudoExample">Exemplo</button>
-                    <button type="button" class="laudo-tool text-tool" id="laudoBrush">🖌 Pincel</button>
-                </div>
-
-                <span class="laudo-status" id="laudoStatus">Pronto.</span>
-            </div>
-
-            <div id="laudoEditor" class="laudo-editor" contenteditable="true" spellcheck="true">
-                <h1>Relatório de Cálculo Judicial</h1>
-                <h2>1. Síntese</h2>
-                <p>Insira ou importe o conteúdo do laudo, parecer ou informação textual. Os dados do processo já estão preenchidos na Aba 1.</p>
-                <h2>2. Informações relevantes</h2>
-                <p>Edite este conteúdo diretamente. Use a barra de ferramentas para títulos, alinhamento, listas, tabelas, links, tamanho e cor do texto.</p>
-                <h2>3. Observações</h2>
-                <p>Use este espaço para ressalvas, conclusões e informações complementares.</p>
-            </div>
-
-            <div class="laudo-help">
-                <strong>Atalho:</strong> selecione um trecho para formatar. <strong>Ctrl+B</strong>, <strong>Ctrl+I</strong> e <strong>Ctrl+U</strong> funcionam normalmente.
-                O botão <strong>Importar</strong> aceita PDF, Markdown, TXT e HTML.
-            </div>
-            <textarea id="textoLivre" class="laudo-hidden-source" aria-hidden="true"></textarea>
-            <select id="fontSizeSelect" class="laudo-hidden-source" aria-hidden="true"><option value="12" selected>12</option></select>
-            <input type="color" id="corSelecionada" class="laudo-hidden-source" value="#BE5014" aria-hidden="true">
-            <input type="file" id="laudoFileInput" class="hidden" multiple accept=".pdf,.md,.markdown,.txt,.html,.htm">
+        <div class="editor-toolbar">
+            <button onclick="formatarTexto('bold')"><b>N</b></button>
+            <button onclick="formatarTexto('italic')"><i>I</i></button>
+            <button onclick="formatarTexto('underline')"><u>S</u></button>
+            <button onclick="formatarTexto('color', document.getElementById('corSelecionada').value)"><span style="background:var(--primary);color:white;padding:0 6px;">A</span></button>
+            <input type="color" id="corSelecionada" value="#BE5014" style="width:30px;height:30px;padding:0;border:none;cursor:pointer;">
+            <span style="font-size:0.9em; color:var(--text-secondary);">Cor</span>
+            <select id="fontSizeSelect" onchange="alterarFonte()">
+                <option value="10">10</option>
+                <option value="10.5">10.5</option>
+                <option value="11">11</option>
+                <option value="11.5">11.5</option>
+                <option value="12" selected>12</option>
+                <option value="12.5">12.5</option>
+                <option value="13">13</option>
+                <option value="13.5">13.5</option>
+                <option value="14">14</option>
+            </select>
+            <span style="font-size:0.9em; color:var(--text-secondary);">tamanho</span>
+            <button onclick="inserirQuebraPagina()" style="background:var(--salmon-light);border-color:var(--primary);">⏎ Quebra de página</button>
+            <button onclick="limparTexto()" style="color:var(--danger);">Limpar</button>
+        </div>
+        <textarea id="textoLivre" rows="8" style="width:100%; font-family: 'Segoe UI', sans-serif; line-height: 1.6;" placeholder="Digite aqui o texto do parecer ou resumo..."></textarea>
+        <div style="margin-top: 10px;">
+            <button class="btn btn-outline" onclick="inserirExemplo()">📄 Inserir Exemplo</button>
         </div>
     </div>
-
-</div>
-
-
-<div id="laudoAppearanceModal">
-  <div class="laudo-modal-card">
-    <h3>Aparência do editor</h3>
-    <p class="modal-subtitle">Ajustes visuais do editor. Não interferem nos cálculos.</p>
-    <div class="laudo-modal-grid">
-      <div>
-        <label>Cor principal</label>
-        <input type="color" id="laudoPrimaryColor" value="#BE5014">
-      </div>
-      <div>
-        <label>Cor dos títulos</label>
-        <input type="color" id="laudoTitleColor" value="#692A08">
-      </div>
-      <div>
-        <label>Estilo dos títulos</label>
-        <select id="laudoTitleStyle">
-          <option value="linha">Título + linha</option>
-          <option value="simples">Título simples</option>
-          <option value="caixa">Título em caixa</option>
-        </select>
-      </div>
-      <div>
-        <label>Cor das linhas</label>
-        <input type="color" id="laudoModalLineColor" value="#cfd6df">
-      </div>
-    </div>
-    <div class="laudo-modal-actions">
-      <button type="button" class="btn btn-outline" id="laudoAppearanceClose">Fechar</button>
-    </div>
-  </div>
-</div>
-
-<div id="laudoTableModal" class="table-modal-overlay">
-  <div class="laudo-table-modal">
-    <h3 style="margin:0 0 5px;color:var(--primary-dark)">Converter seleção em tabela</h3>
-    <p id="laudoTableSubtitle" style="margin:0 0 15px;color:var(--text-secondary);font-size:13px"></p>
-    <div class="row" style="margin-bottom:12px">
-      <button type="button" class="btn btn-outline" id="laudoAddRow">+ Linha</button>
-      <button type="button" class="btn btn-outline" id="laudoAddCol">+ Coluna</button>
-      <button type="button" class="btn btn-outline" id="laudoRemoveRow">− Linha</button>
-      <button type="button" class="btn btn-outline" id="laudoRemoveCol">− Coluna</button>
-    </div>
-    <div style="border:1px solid #d9dee7;border-radius:8px;overflow:auto;max-height:48vh">
-      <table id="laudoTablePreview"></table>
-    </div>
-    <div class="laudo-modal-actions">
-      <button type="button" class="btn btn-outline" id="laudoCancelTable">Cancelar</button>
-      <button type="button" class="btn btn-primary" id="laudoConfirmTable">Inserir tabela</button>
-    </div>
-  </div>
 </div>
 
 <div id="printArea"></div>
@@ -1505,7 +1213,6 @@
     function limparTexto() {
         if (confirm('Limpar todo o texto?')) {
             document.getElementById('textoLivre').value = '';
-        if (document.getElementById('laudoEditor')) document.getElementById('laudoEditor').innerHTML = '<h1>Relatório de Cálculo Judicial</h1><h2>1. Síntese</h2><p></p><h2>2. Informações relevantes</h2><p></p><h2>3. Observações</h2><p></p>';
         }
     }
 
@@ -2424,13 +2131,11 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
 
     // --- GERAR PDF (COM CORREÇÃO DA QUEBRA DE PÁGINA) ---
     function prepararEImprimir() {
-        if (document.getElementById('laudoEditor') && document.getElementById('textoLivre')) document.getElementById('textoLivre').value = document.getElementById('laudoEditor').innerHTML;
         let incluirPrincipal = document.getElementById('incluirPrincipal').checked;
         let incluirHonorarios = document.getElementById('incluirHonorarios').checked;
         let incluirOutrosPDF = document.getElementById('incluirOutros').checked;
-        let incluirLaudo = document.getElementById('incluirLaudo')?.checked || false;
 
-        if (!incluirPrincipal && !incluirHonorarios && !incluirOutrosPDF && !incluirLaudo) {
+        if (!incluirPrincipal && !incluirHonorarios && !incluirOutrosPDF) {
             alert('Selecione pelo menos uma seção para gerar o PDF.');
             return;
         }
@@ -2454,8 +2159,13 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
         let obsTexto = document.getElementById('obsCalculo').value.trim();
         let obsHtml = obsTexto ? `<div style="font-size: 11pt; margin-top: 10px;"><strong>Observações:</strong> ${obsTexto}</div>` : '';
 
-        // O Editor de Laudo é tratado ao final do relatório, em página/documento separado.
-
+        let textoLivreRaw = document.getElementById('textoLivre').value.trim();
+        let fontSize = document.getElementById('fontSizeSelect').value;
+        let textoLivreHtml = '';
+        if (textoLivreRaw) {
+            textoLivreHtml = `<div class="print-texto-livre" style="font-size: ${fontSize}pt; line-height: 1.6; margin: 15px 0;">${textoLivreRaw.replace(/\n/g, '<br>')}</div>`;
+        }
+        
         let html = `
             <div class="print-header-box">
                 <h1>${tituloRelatorio}</h1>
@@ -2473,8 +2183,10 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
             </div>
         `;
 
-        // O Editor de Laudo não é inserido antes do cálculo.
-        // Ele será acrescentado ao final como documento/página independente.
+        if (textoLivreHtml) {
+            html += textoLivreHtml;
+        }
+
         let primeiraSecao = true; // controla quebra de página
 
         // --- SEÇÃO CÁLCULO PRINCIPAL ---
@@ -2734,31 +2446,6 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
             html += `<div style="margin-top: 20px; font-size: 10pt; page-break-inside: avoid;"><strong>Observações Finais:</strong><br>${obsFinais.replace(/\n/g, '<br>')}</div>`;
         }
 
-        // --- DOCUMENTO DO EDITOR DE LAUDO (PÁGINA SEPARADA) ---
-        if (incluirLaudo) {
-            const laudoEditor = document.getElementById('laudoEditor');
-            const laudoHtml = laudoEditor ? laudoEditor.innerHTML.trim() : '';
-            const processo = document.getElementById('procNumero').value || '-';
-            const autora = document.getElementById('procAutor').value || '-';
-            const reu = document.getElementById('procReu').value || '-';
-
-            html += `
-                <div class="print-laudo-document">
-                    <div class="print-laudo-header">
-                        <h2>Documento Complementar — Editor de Laudo</h2>
-                        <div class="print-laudo-meta">
-                            <div><strong>Processo:</strong> ${processo}</div>
-                            <div><strong>Parte Autora:</strong> ${autora}</div>
-                            <div><strong>Réu:</strong> ${reu}</div>
-                        </div>
-                    </div>
-                    <div class="print-laudo-body">
-                        ${laudoHtml || '<div class="print-laudo-empty">Nenhum conteúdo foi inserido no Editor de Laudo.</div>'}
-                    </div>
-                </div>
-            `;
-        }
-
         html += `<div class="print-footer">Relatório emitido em ${hoje}.</div>`;
 
         printArea.innerHTML = html;
@@ -2835,13 +2522,7 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
                 subtituloOutros: document.getElementById('subtituloOutros').value,
                 textoLivre: document.getElementById('textoLivre').value,
                 fontSize: document.getElementById('fontSizeSelect').value,
-                chkSucumbenciaIncluiGuia5: document.getElementById('chkSucumbenciaIncluiGuia5').checked,
-                laudoHtml: document.getElementById('laudoEditor') ? document.getElementById('laudoEditor').innerHTML : document.getElementById('textoLivre').value,
-                laudoCorPrincipal: document.getElementById('laudoPrimaryColor')?.value || '#BE5014',
-                laudoCorTitulos: document.getElementById('laudoTitleColor')?.value || '#692A08',
-                laudoEstiloTitulos: document.getElementById('laudoTitleStyle')?.value || 'linha',
-                laudoCorLinha: document.getElementById('laudoLineColor')?.value || '#cfd6df',
-                incluirLaudo: document.getElementById('incluirLaudo')?.checked ?? true
+                chkSucumbenciaIncluiGuia5: document.getElementById('chkSucumbenciaIncluiGuia5').checked
             },
             lancamentos: lancamentos,
             outrosValores: outrosValores,
@@ -2935,9 +2616,6 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
                         alterarFonte();
                     }
                     document.getElementById('chkSucumbenciaIncluiGuia5').checked = j.meta.chkSucumbenciaIncluiGuia5 || false;
-                    if (j.meta.incluirLaudo !== undefined && document.getElementById('incluirLaudo')) {
-                        document.getElementById('incluirLaudo').checked = !!j.meta.incluirLaudo;
-                    }
                 }
                 lancamentos = j.lancamentos || [];
                 outrosValores = j.outrosValores || [];
@@ -3027,7 +2705,6 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
                 }
                 atualizarTituloOutrosCard();
                 atualizarSaldoGuia5Exibido();
-                if (window.__carregarLaudoDoProjeto) window.__carregarLaudoDoProjeto(j.meta);
                 alert("Projeto carregado com sucesso!");
             } catch (err) {
                 alert("Erro ao ler arquivo. JSON inválido.");
@@ -3064,7 +2741,6 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
         document.getElementById('tituloOutros').value = 'OUTROS VALORES (Lançamentos Individuais)';
         document.getElementById('subtituloOutros').value = 'SALDO TOTAL DOS OUTROS VALORES';
         document.getElementById('textoLivre').value = '';
-        if (document.getElementById('incluirLaudo')) document.getElementById('incluirLaudo').checked = true;
         document.getElementById('fontSizeSelect').value = '12';
         alterarFonte();
         
@@ -3087,378 +2763,6 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
         atualizarTituloOutrosCard();
         atualizarSaldoGuia5Exibido();
     }
-
-/* =========================================================
-   CONTADJUS — EDITOR DE LAUDOS INTEGRADO
-   Este módulo é isolado em IIFE e não substitui funções de cálculo.
-   ========================================================= */
-(function(){
-  if(typeof window.pdfjsLib!=='undefined'){
-    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-  }
-  const $=id=>document.getElementById(id);
-  const ed=$('laudoEditor');
-  if(!ed) return;
-
-  let savedRange=null;
-  let brushStyle=null;
-  let tableData=null;
-
-  function setStatus(msg){ if($('laudoStatus')) $('laudoStatus').textContent=msg; }
-
-  function saveSel(){
-    const s=window.getSelection();
-    if(s && s.rangeCount && ed.contains(s.anchorNode)) savedRange=s.getRangeAt(0).cloneRange();
-  }
-  function restoreSel(){
-    if(!savedRange) return;
-    const s=window.getSelection(); s.removeAllRanges(); s.addRange(savedRange);
-  }
-  ['keyup','mouseup','input'].forEach(ev=>ed.addEventListener(ev,saveSel));
-
-  function syncLegacyText(){
-    const hidden=$('textoLivre');
-    if(hidden) hidden.value=ed.innerHTML;
-  }
-  function syncContext(){
-    const pairs=[
-      ['laudoCtxProcesso','procNumero'],
-      ['laudoCtxAutor','procAutor'],
-      ['laudoCtxReu','procReu']
-    ];
-    pairs.forEach(([a,b])=>{if($(a)&&$(b)) $(a).textContent=$(b).value||'—';});
-    syncLegacyText();
-  }
-  ['procNumero','procAssunto','procAutor','procReu','dataAjuizamento','dataCitacao','dataAtualizacao']
-    .forEach(id=>$(id)?.addEventListener('input',syncContext));
-  syncContext();
-
-  function command(cmd,value=null){
-    restoreSel(); ed.focus();
-    document.execCommand(cmd,false,value);
-    saveSel(); syncLegacyText();
-    updateTitleState();
-  }
-  document.querySelectorAll('#tab6 [data-laudo-cmd]').forEach(btn=>{
-    btn.addEventListener('mousedown',e=>e.preventDefault());
-    btn.addEventListener('click',()=>command(btn.dataset.laudoCmd));
-  });
-
-  document.querySelectorAll('#tab6 .laudo-title-btn').forEach(btn=>{
-    btn.addEventListener('mousedown',e=>e.preventDefault());
-    btn.addEventListener('click',()=>{
-      command('formatBlock',btn.dataset.block);
-      document.querySelectorAll('#tab6 .laudo-title-btn').forEach(x=>x.classList.remove('active'));
-      btn.classList.add('active');
-    });
-  });
-
-  function updateTitleState(){
-    const s=window.getSelection(); if(!s||!s.anchorNode)return;
-    const el=s.anchorNode.nodeType===3?s.anchorNode.parentElement:s.anchorNode;
-    const block=el?.closest('h1,h2,h3,p,blockquote');
-    if(!block)return;
-    const tag=block.tagName.toLowerCase();
-    document.querySelectorAll('#tab6 .laudo-title-btn').forEach(x=>x.classList.toggle('active',x.dataset.block===tag));
-  }
-  ed.addEventListener('keyup',updateTitleState);
-  ed.addEventListener('mouseup',updateTitleState);
-
-  $('laudoUndo')?.addEventListener('mousedown',e=>e.preventDefault());
-  $('laudoRedo')?.addEventListener('mousedown',e=>e.preventDefault());
-  $('laudoUndo')?.addEventListener('click',()=>command('undo'));
-  $('laudoRedo')?.addEventListener('click',()=>command('redo'));
-
-  function exactFontSize(px){
-    restoreSel(); ed.focus();
-    if(!savedRange || savedRange.collapsed)return;
-    document.execCommand('fontSize',false,'7');
-    ed.querySelectorAll('font[size="7"]').forEach(f=>{
-      const span=document.createElement('span'); span.style.fontSize=px+'px';
-      while(f.firstChild)span.appendChild(f.firstChild); f.replaceWith(span);
-    });
-    saveSel(); syncLegacyText();
-  }
-  function selectedFontSize(){
-    const s=window.getSelection(); if(!s||!s.anchorNode)return 14;
-    const el=s.anchorNode.nodeType===3?s.anchorNode.parentElement:s.anchorNode;
-    const n=parseFloat(getComputedStyle(el).fontSize);
-    return Number.isFinite(n)?n:14;
-  }
-  const sizes=[8,10,11,12,13,14,16,18,20,22,24,26,28,30,32,36,40,42];
-  function changeFont(dir){
-    const cur=selectedFontSize();
-    let idx=sizes.findIndex(v=>v>=cur); if(idx<0)idx=sizes.length-1;
-    if(dir<0 && idx>0)idx--; if(dir>0 && idx<sizes.length-1 && sizes[idx]<=cur)idx++;
-    exactFontSize(sizes[idx]); if($('laudoFontSize'))$('laudoFontSize').value=String(sizes[idx]);
-  }
-  $('laudoFontDown')?.addEventListener('mousedown',e=>e.preventDefault());
-  $('laudoFontUp')?.addEventListener('mousedown',e=>e.preventDefault());
-  $('laudoFontDown')?.addEventListener('click',()=>changeFont(-1));
-  $('laudoFontUp')?.addEventListener('click',()=>changeFont(1));
-  $('laudoFontSize')?.addEventListener('change',e=>{if(e.target.value)exactFontSize(e.target.value);e.target.value='';});
-  $('laudoFontColor')?.addEventListener('input',e=>command('foreColor',e.target.value));
-
-  $('laudoPageBreak')?.addEventListener('mousedown',e=>e.preventDefault());
-  $('laudoPageBreak')?.addEventListener('click',()=>{
-    restoreSel();ed.focus();document.execCommand('insertHTML',false,'<div class="page-break" style="page-break-after:always;height:0"></div>');
-    saveSel();syncLegacyText();setStatus('Quebra de página inserida.');
-  });
-  $('laudoLine')?.addEventListener('mousedown',e=>e.preventDefault());
-  $('laudoLine')?.addEventListener('click',()=>{
-    restoreSel();ed.focus();
-    const c=$('laudoLineColor')?.value||'#cfd6df';
-    document.execCommand('insertHTML',false,'<hr class="laudo-rule" style="--laudo-line:'+c+'">');
-    saveSel();syncLegacyText();
-  });
-  $('laudoLineColor')?.addEventListener('input',e=>document.documentElement.style.setProperty('--laudo-line',e.target.value));
-
-  let selectedRule=null;
-  ed.addEventListener('click',e=>{
-    if(e.target.classList.contains('laudo-rule')){
-      if(selectedRule)selectedRule.classList.remove('selected');
-      selectedRule=e.target;e.target.classList.add('selected');
-    }else if(selectedRule){selectedRule.classList.remove('selected');selectedRule=null;}
-  });
-
-  $('laudoLink')?.addEventListener('mousedown',e=>e.preventDefault());
-  $('laudoLink')?.addEventListener('click',()=>{
-    const u=prompt('URL do link:');
-    if(u)command('createLink',u);
-  });
-
-  $('laudoClearFormat')?.addEventListener('mousedown',e=>e.preventDefault());
-  $('laudoClearFormat')?.addEventListener('click',()=>command('removeFormat'));
-
-  function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
-  function normalizeText(raw){return raw.replace(/\r/g,'').replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').trim();}
-  function autoFormat(raw){
-    const lines=normalizeText(raw).split('\n');let out='',list=false;
-    const isTitle=s=>s.length<=120&&(
-      /^(I{1,3}|IV|V|VI{0,3}|VII|VIII|IX|X)[\.\-\)]\s+/i.test(s) ||
-      /^(DOS |DAS |DO |DA |CRITÉRIOS|CONCLUSÃO|CONSIDERAÇÕES|DISPOSITIVO|RELATÓRIO|SÍNTESE|OBJETO|METODOLOGIA|RESULTADO|OBSERVAÇÕES|FUNDAMENTAÇÃO)/i.test(s) ||
-      (s===s.toUpperCase()&&/[A-ZÁÉÍÓÚÂÊÔÃÕÇ]/.test(s)&&s.length<90)
-    );
-    const isSub=s=>s.length<100&&(/^[0-9]+\.\s+/.test(s)||/^[A-Z]\)\s+/.test(s));
-    lines.forEach(line=>{
-      const s=line.trim();if(!s){if(list){out+='</ul>';list=false}return;}
-      if(/^[-•►]\s*/.test(s)){if(!list){out+='<ul>';list=true}out+='<li>'+escapeHtml(s.replace(/^[-•►]\s*/,''))+'</li>';return;}
-      if(list){out+='</ul>';list=false;}
-      if(isTitle(s))out+='<h2>'+escapeHtml(s)+'</h2>';
-      else if(isSub(s))out+='<h3>'+escapeHtml(s)+'</h3>';
-      else out+='<p>'+escapeHtml(s)+'</p>';
-    });
-    if(list)out+='</ul>';return out||'<p></p>';
-  }
-  $('laudoAuto')?.addEventListener('mousedown',e=>e.preventDefault());
-  $('laudoAuto')?.addEventListener('click',()=>{
-    const t=ed.innerText.trim();if(!t)return;
-    ed.innerHTML='<h1>Relatório de Laudo / Informações</h1>'+autoFormat(t);
-    syncLegacyText();setStatus('Conteúdo organizado automaticamente.');
-  });
-
-  function readPdf(file){
-    if(typeof pdfjsLib==='undefined')return Promise.reject(new Error('Leitor PDF não carregado.'));
-    setStatus('Lendo PDF...');
-    return file.arrayBuffer().then(buf=>pdfjsLib.getDocument({data:buf}).promise).then(async pdf=>{
-      let all=[];
-      for(let i=1;i<=pdf.numPages;i++){
-        setStatus(`Lendo página ${i} de ${pdf.numPages}...`);
-        const page=await pdf.getPage(i), content=await page.getTextContent();
-        let lastY=null,line='';
-        for(const item of content.items){
-          const y=Math.round(item.transform[5]);
-          if(lastY!==null&&Math.abs(y-lastY)>4){if(line.trim())all.push(line.trim());line='';}
-          line+=(line?' ':'')+item.str;lastY=y;
-        }
-        if(line.trim())all.push(line.trim());all.push('');
-      }
-      ed.innerHTML='<h1>Conteúdo importado</h1>'+autoFormat(all.join('\n'));
-      syncLegacyText();setStatus(`PDF lido: ${pdf.numPages} página(s).`);
-    });
-  }
-  function markdownToHtml(md){
-    const lines=md.replace(/\r/g,'').split('\n');let out='',ul=false,ol=false;
-    const esc=s=>escapeHtml(s).replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/__([^_]+)__/g,'<strong>$1</strong>')
-      .replace(/\*([^*]+)\*/g,'<em>$1</em>').replace(/_([^_]+)_/g,'<em>$1</em>').replace(/~~([^~]+)~~/g,'<del>$1</del>');
-    function close(){if(ul){out+='</ul>';ul=false}if(ol){out+='</ol>';ol=false}}
-    lines.forEach(t0=>{
-      const t=t0.trim();if(!t){close();return;}
-      let h=t.match(/^(#{1,3})\s+(.+)$/);if(h){close();out+=`<h${h[1].length}>${esc(h[2])}</h${h[1].length}>`;return;}
-      let u=t.match(/^[-*+]\s+(.+)$/);if(u){if(!ul){close();out+='<ul>';ul=true}out+='<li>'+esc(u[1])+'</li>';return;}
-      let o=t.match(/^\d+\.\s+(.+)$/);if(o){if(!ol){close();out+='<ol>';ol=true}out+='<li>'+esc(o[1])+'</li>';return;}
-      if(/^>\s?/.test(t)){close();out+='<blockquote>'+esc(t.replace(/^>\s?/,'') )+'</blockquote>';return;}
-      if(/^---+$/.test(t)){close();out+='<hr class="laudo-rule">';return;}
-      close();out+='<p>'+esc(t)+'</p>';
-    });close();return out||'<p></p>';
-  }
-  function htmlToEditor(text,ext){
-    if(ext==='md'||ext==='markdown')return markdownToHtml(text);
-    if(ext==='html'||ext==='htm'){
-      const doc=new DOMParser().parseFromString(text,'text/html');
-      doc.body.querySelectorAll('script,style,meta,link').forEach(x=>x.remove());
-      return doc.body.innerHTML||'<p></p>';
-    }
-    return autoFormat(text);
-  }
-  async function openFile(file){
-    const ext=(file.name.split('.').pop()||'').toLowerCase();
-    if(ext==='pdf'){await readPdf(file);return;}
-    ed.innerHTML=htmlToEditor(await file.text(),ext);syncLegacyText();
-    setStatus('Arquivo carregado: '+file.name);
-  }
-  $('laudoImport')?.addEventListener('mousedown',e=>e.preventDefault());
-  $('laudoImport')?.addEventListener('click',()=>{$('laudoFileInput').value='';$('laudoFileInput').click();});
-  $('laudoFileInput')?.addEventListener('change',async e=>{
-    const files=Array.from(e.target.files||[]);if(!files[0])return;
-    try{await openFile(files[0]);}catch(err){setStatus('Erro ao importar: '+err.message);}
-  });
-
-  $('laudoExample')?.addEventListener('click',()=>{
-    ed.innerHTML=`<h2>Sobre os cálculos</h2><p>O presente texto tem por finalidade apresentar informações complementares ao cálculo judicial realizado no sistema.</p><p>Os dados de identificação do processo são preenchidos automaticamente a partir da Aba 1.</p><p>Descreva aqui os critérios, premissas, documentos considerados e observações relevantes.</p>`;
-    syncLegacyText();setStatus('Modelo inserido.');
-  });
-
-  $('laudoAppearanceBtn')?.addEventListener('click',()=>{$('laudoAppearanceModal').classList.add('open');});
-  $('laudoAppearanceClose')?.addEventListener('click',()=>{$('laudoAppearanceModal').classList.remove('open');});
-  $('laudoAppearanceModal')?.addEventListener('click',e=>{if(e.target.id==='laudoAppearanceModal')e.currentTarget.classList.remove('open');});
-
-  function applyAppearance(){
-    const c=$('laudoPrimaryColor')?.value||'#BE5014';
-    const tc=$('laudoTitleColor')?.value||'#692A08';
-    document.documentElement.style.setProperty('--primary',c);
-    document.documentElement.style.setProperty('--primary-dark',tc);
-    document.documentElement.style.setProperty('--salmon-light',mix(c,'#ffffff',.62));
-    document.documentElement.style.setProperty('--salmon-soft',mix(c,'#ffffff',.84));
-    document.documentElement.style.setProperty('--laudo-line',$('laudoModalLineColor')?.value||'#cfd6df');
-    const style=$('laudoTitleStyle')?.value||'linha';
-    ed.querySelectorAll('h1,h2,h3').forEach(h=>{h.style.background='';h.style.color='';h.style.padding='';h.style.borderBottom='';h.style.borderRadius='';});
-    ed.querySelectorAll('h1,h2,h3').forEach(h=>h.style.color=tc);
-    if(style==='linha')ed.querySelectorAll('h2').forEach(h=>{h.style.borderBottom='1px solid '+tc;h.style.paddingBottom='5px';});
-    if(style==='caixa')ed.querySelectorAll('h2').forEach(h=>{h.style.background=c;h.style.color='#fff';h.style.padding='8px 10px';h.style.borderRadius='4px';});
-    syncLegacyText();
-  }
-  function mix(hex,target,amount){
-    const clean=String(hex).replace('#','');const t=String(target).replace('#','');
-    const a={r:parseInt(clean.slice(0,2),16),g:parseInt(clean.slice(2,4),16),b:parseInt(clean.slice(4,6),16)};
-    const b={r:parseInt(t.slice(0,2),16),g:parseInt(t.slice(2,4),16),b:parseInt(t.slice(4,6),16)};
-    const f=v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0');
-    return '#'+f(a.r+(b.r-a.r)*amount)+f(a.g+(b.g-a.g)*amount)+f(a.b+(b.b-a.b)*amount);
-  }
-  ['laudoPrimaryColor','laudoTitleColor','laudoTitleStyle','laudoModalLineColor'].forEach(id=>$(id)?.addEventListener('input',applyAppearance));
-  $('laudoTitleStyle')?.addEventListener('change',applyAppearance);
-
-  // Pincel de formatação simples e previsível.
-  $('laudoBrush')?.addEventListener('mousedown',e=>e.preventDefault());
-  $('laudoBrush')?.addEventListener('click',()=>{
-    const s=window.getSelection();
-    if(!s||s.rangeCount===0||s.isCollapsed||!ed.contains(s.anchorNode)){setStatus('Selecione primeiro o trecho cuja formatação será copiada.');return;}
-    const node=s.anchorNode.nodeType===3?s.anchorNode.parentElement:s.anchorNode;
-    brushStyle={
-      fontSize:getComputedStyle(node).fontSize,color:getComputedStyle(node).color,
-      fontWeight:getComputedStyle(node).fontWeight,fontStyle:getComputedStyle(node).fontStyle,
-      textDecoration:getComputedStyle(node).textDecoration
-    };
-    setStatus('Pincel ativo: selecione o trecho de destino.');
-    $('laudoBrush').classList.add('active');
-  });
-  ed.addEventListener('mouseup',()=>{
-    if(!brushStyle||!window.getSelection()?.toString().trim())return;
-    restoreSel();const s=window.getSelection();if(!s.rangeCount)return;
-    const r=s.getRangeAt(0),span=document.createElement('span');
-    Object.assign(span.style,brushStyle);
-    try{r.surroundContents(span);}catch(e){const f=r.extractContents();span.appendChild(f);r.insertNode(span);}
-    saveSel();syncLegacyText();brushStyle=null;$('laudoBrush')?.classList.remove('active');setStatus('Formatação aplicada.');
-  });
-
-  // Modal de tabela.
-  function selectedLines(){
-    const s=window.getSelection();if(!s||!s.rangeCount||s.isCollapsed||!ed.contains(s.anchorNode))return null;
-    const text=s.getRangeAt(0).toString().replace(/\r/g,'').trim();if(!text)return null;
-    const rows=text.split('\n').map(x=>x.trim()).filter(Boolean).map(line=>{
-      let clean=line.replace(/^[-*•►]\s+/,'').replace(/^\d+[\.\)]\s+/,'').trim();
-      if(clean.includes('|'))return clean.split('|').map(x=>x.trim());
-      const c=clean.match(/^(.+?)\s*:\s*(.+)$/);if(c)return [c[1].trim(),c[2].trim()];
-      const d=clean.match(/^(.+?)\s+[–—-]\s+(.+)$/);if(d)return [d[1].trim(),d[2].trim()];
-      return [clean];
-    });
-    const cols=Math.max(...rows.map(r=>r.length),1);rows.forEach(r=>{while(r.length<cols)r.push('');});
-    return {range:s.getRangeAt(0).cloneRange(),rows,cols};
-  }
-  function renderTableModal(){
-    const t=$('laudoTablePreview');t.innerHTML='';if(!tableData)return;
-    const thead=document.createElement('thead'),trh=document.createElement('tr');
-    tableData.rows[0].forEach((v,c)=>{const th=document.createElement('th');th.contentEditable='true';th.textContent=v;th.dataset.c=c;trh.appendChild(th);});
-    thead.appendChild(trh);t.appendChild(thead);
-    const tb=document.createElement('tbody');
-    tableData.rows.slice(1).forEach(row=>{const tr=document.createElement('tr');row.forEach(v=>{const td=document.createElement('td');td.contentEditable='true';td.textContent=v;tr.appendChild(td)});tb.appendChild(tr)});
-    t.appendChild(tb);
-  }
-  function syncTableData(){
-    const t=$('laudoTablePreview'),rows=[];
-    const h=t.querySelector('thead tr');if(h)rows.push(Array.from(h.children).map(x=>x.textContent.trim()));
-    t.querySelectorAll('tbody tr').forEach(tr=>rows.push(Array.from(tr.children).map(x=>x.textContent.trim())));
-    if(tableData){tableData.rows=rows;tableData.cols=Math.max(...rows.map(r=>r.length),1);}
-  }
-  $('laudoConvertTable')?.addEventListener('mousedown',e=>e.preventDefault());
-  $('laudoConvertTable')?.addEventListener('click',()=>{
-    const d=selectedLines();if(!d){setStatus('Selecione primeiro as linhas que deseja transformar em tabela.');return;}
-    tableData=d;renderTableModal();$('laudoTableSubtitle').textContent=`${d.rows.length} linha(s) e ${d.cols} coluna(s). Edite antes de inserir.`;$('laudoTableModal').classList.add('open');
-  });
-  $('laudoAddRow')?.addEventListener('click',()=>{syncTableData();tableData.rows.push(Array(tableData.cols).fill(''));renderTableModal();});
-  $('laudoAddCol')?.addEventListener('click',()=>{syncTableData();tableData.rows.forEach(r=>r.push(''));tableData.cols++;renderTableModal();});
-  $('laudoRemoveRow')?.addEventListener('click',()=>{syncTableData();if(tableData.rows.length>2)tableData.rows.pop();renderTableModal();});
-  $('laudoRemoveCol')?.addEventListener('click',()=>{syncTableData();if(tableData.cols>1){tableData.rows.forEach(r=>r.pop());tableData.cols--;}renderTableModal();});
-  $('laudoCancelTable')?.addEventListener('click',()=>{$('laudoTableModal').classList.remove('open');tableData=null;});
-  $('laudoConfirmTable')?.addEventListener('click',()=>{
-    syncTableData();const d=tableData;if(!d)return;
-    const table=document.createElement('table');table.className='editor-markdown-table';
-    const thead=document.createElement('thead'),trh=document.createElement('tr');
-    d.rows[0].forEach(v=>{const th=document.createElement('th');th.textContent=v;trh.appendChild(th)});thead.appendChild(trh);table.appendChild(thead);
-    const tb=document.createElement('tbody');d.rows.slice(1).forEach(row=>{const tr=document.createElement('tr');row.forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td)});tb.appendChild(tr)});table.appendChild(tb);
-    d.range.deleteContents();d.range.insertNode(table);table.after(Object.assign(document.createElement('p'),{innerHTML:'<br>'}));
-    $('laudoTableModal').classList.remove('open');tableData=null;syncLegacyText();setStatus('Tabela inserida.');
-  });
-  $('laudoTableModal')?.addEventListener('click',e=>{if(e.target.id==='laudoTableModal'){$('laudoTableModal').classList.remove('open');tableData=null;}});
-
-  $('laudoTable')?.addEventListener('mousedown',e=>e.preventDefault());
-  $('laudoTable')?.addEventListener('click',()=>{
-    const rows=Math.max(1,parseInt(prompt('Número de linhas:','3')||'3'));
-    const cols=Math.max(1,parseInt(prompt('Número de colunas:','3')||'3'));
-    let t='<table><thead><tr>'+Array.from({length:cols},(_,i)=>`<th>Coluna ${i+1}</th>`).join('')+'</tr></thead><tbody>';
-    for(let r=0;r<rows-1;r++)t+='<tr>'+Array.from({length:cols},()=>'<td>&nbsp;</td>').join('')+'</tr>';
-    t+='</tbody></table>';restoreSel();ed.focus();document.execCommand('insertHTML',false,t);syncLegacyText();
-  });
-
-  // Conteúdo editado alimenta o campo legado usado pelo PDF atual.
-  ed.addEventListener('input',syncLegacyText);
-  syncLegacyText();
-  applyAppearance();
-
-  // Persistência do editor junto ao projeto sem alterar os arrays/motores de cálculo.
-  const originalSalvarJSON=window.salvarJSON;
-  if(typeof originalSalvarJSON==='function'){
-    window.salvarJSON=function(){
-      syncLegacyText();
-      return originalSalvarJSON.apply(this,arguments);
-    };
-  }
-  const originalCarregarJSON=window.carregarJSON;
-  if(typeof originalCarregarJSON==='function'){
-    // O loader existente já lê meta.textoLivre. A extensão abaixo carrega laudoHtml,
-    // caso exista, sem modificar qualquer estrutura de cálculo.
-    window.__carregarLaudoDoProjeto=function(meta){
-      if(!meta)return;
-      if(meta.laudoHtml)ed.innerHTML=meta.laudoHtml;
-      if($('laudoPrimaryColor')&&meta.laudoCorPrincipal)$('laudoPrimaryColor').value=meta.laudoCorPrincipal;
-      if($('laudoTitleColor')&&meta.laudoCorTitulos)$('laudoTitleColor').value=meta.laudoCorTitulos;
-      if($('laudoTitleStyle')&&meta.laudoEstiloTitulos)$('laudoTitleStyle').value=meta.laudoEstiloTitulos;
-      if($('laudoLineColor')&&meta.laudoCorLinha)$('laudoLineColor').value=meta.laudoCorLinha;
-      applyAppearance();syncLegacyText();
-    };
-  }
-})();
-
 </script>
 </body>
 </html>
