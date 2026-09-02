@@ -362,6 +362,51 @@
                 border-top: 1px solid #ddd;
                 padding-top: 15px;
             }
+
+            .print-laudo-document {
+                page-break-before: always;
+                page-break-inside: auto;
+                font-size: 11.5pt;
+                line-height: 1.65;
+            }
+            .print-laudo-document .print-laudo-header {
+                border-bottom: 2px solid var(--primary);
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+            .print-laudo-document .print-laudo-header h2 {
+                margin: 0 0 10px 0;
+                color: var(--primary-dark);
+                border-left: 6px solid var(--primary);
+                padding-left: 12px;
+                font-size: 17pt;
+            }
+            .print-laudo-document .print-laudo-meta {
+                font-size: 10pt;
+                line-height: 1.55;
+                color: #333;
+            }
+            .print-laudo-document .print-laudo-body {
+                border: 1px solid #ddd;
+                padding: 14px 16px;
+                background: #fff;
+            }
+            .print-laudo-document .print-laudo-body h1,
+            .print-laudo-document .print-laudo-body h2,
+            .print-laudo-document .print-laudo-body h3 {
+                page-break-after: avoid;
+            }
+            .print-laudo-document .print-laudo-body table {
+                page-break-inside: auto;
+            }
+            .print-laudo-document .print-laudo-body tr {
+                page-break-inside: avoid;
+            }
+            .print-laudo-document .print-laudo-empty {
+                color: #777;
+                font-style: italic;
+                padding: 20px 0;
+            }
         }
 
         #infoMajoracao {
@@ -510,6 +555,7 @@
             <label><input type="checkbox" id="incluirPrincipal" checked> Cálculo Principal</label>
             <label><input type="checkbox" id="incluirHonorarios" checked> Honorários (Valor da Causa)</label>
             <label><input type="checkbox" id="incluirOutros" checked> Outros Lançamentos</label>
+            <label><input type="checkbox" id="incluirLaudo" checked> Editor de Laudo (página separada)</label>
         </div>
         
         <button class="btn btn-primary" onclick="prepararEImprimir()">🖨️ Gerar PDF</button>
@@ -2382,8 +2428,9 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
         let incluirPrincipal = document.getElementById('incluirPrincipal').checked;
         let incluirHonorarios = document.getElementById('incluirHonorarios').checked;
         let incluirOutrosPDF = document.getElementById('incluirOutros').checked;
+        let incluirLaudo = document.getElementById('incluirLaudo')?.checked || false;
 
-        if (!incluirPrincipal && !incluirHonorarios && !incluirOutrosPDF) {
+        if (!incluirPrincipal && !incluirHonorarios && !incluirOutrosPDF && !incluirLaudo) {
             alert('Selecione pelo menos uma seção para gerar o PDF.');
             return;
         }
@@ -2407,13 +2454,8 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
         let obsTexto = document.getElementById('obsCalculo').value.trim();
         let obsHtml = obsTexto ? `<div style="font-size: 11pt; margin-top: 10px;"><strong>Observações:</strong> ${obsTexto}</div>` : '';
 
-        let textoLivreRaw = document.getElementById('textoLivre').value.trim();
-        let fontSize = document.getElementById('fontSizeSelect').value;
-        let textoLivreHtml = '';
-        if (textoLivreRaw) {
-            textoLivreHtml = `<div class="print-texto-livre" style="font-size: ${fontSize}pt; line-height: 1.6; margin: 15px 0;">${textoLivreRaw.replace(/\n/g, '<br>')}</div>`;
-        }
-        
+        // O Editor de Laudo é tratado ao final do relatório, em página/documento separado.
+
         let html = `
             <div class="print-header-box">
                 <h1>${tituloRelatorio}</h1>
@@ -2431,10 +2473,8 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
             </div>
         `;
 
-        if (textoLivreHtml) {
-            html += textoLivreHtml;
-        }
-
+        // O Editor de Laudo não é inserido antes do cálculo.
+        // Ele será acrescentado ao final como documento/página independente.
         let primeiraSecao = true; // controla quebra de página
 
         // --- SEÇÃO CÁLCULO PRINCIPAL ---
@@ -2694,6 +2734,31 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
             html += `<div style="margin-top: 20px; font-size: 10pt; page-break-inside: avoid;"><strong>Observações Finais:</strong><br>${obsFinais.replace(/\n/g, '<br>')}</div>`;
         }
 
+        // --- DOCUMENTO DO EDITOR DE LAUDO (PÁGINA SEPARADA) ---
+        if (incluirLaudo) {
+            const laudoEditor = document.getElementById('laudoEditor');
+            const laudoHtml = laudoEditor ? laudoEditor.innerHTML.trim() : '';
+            const processo = document.getElementById('procNumero').value || '-';
+            const autora = document.getElementById('procAutor').value || '-';
+            const reu = document.getElementById('procReu').value || '-';
+
+            html += `
+                <div class="print-laudo-document">
+                    <div class="print-laudo-header">
+                        <h2>Documento Complementar — Editor de Laudo</h2>
+                        <div class="print-laudo-meta">
+                            <div><strong>Processo:</strong> ${processo}</div>
+                            <div><strong>Parte Autora:</strong> ${autora}</div>
+                            <div><strong>Réu:</strong> ${reu}</div>
+                        </div>
+                    </div>
+                    <div class="print-laudo-body">
+                        ${laudoHtml || '<div class="print-laudo-empty">Nenhum conteúdo foi inserido no Editor de Laudo.</div>'}
+                    </div>
+                </div>
+            `;
+        }
+
         html += `<div class="print-footer">Relatório emitido em ${hoje}.</div>`;
 
         printArea.innerHTML = html;
@@ -2775,7 +2840,8 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
                 laudoCorPrincipal: document.getElementById('laudoPrimaryColor')?.value || '#BE5014',
                 laudoCorTitulos: document.getElementById('laudoTitleColor')?.value || '#692A08',
                 laudoEstiloTitulos: document.getElementById('laudoTitleStyle')?.value || 'linha',
-                laudoCorLinha: document.getElementById('laudoLineColor')?.value || '#cfd6df'
+                laudoCorLinha: document.getElementById('laudoLineColor')?.value || '#cfd6df',
+                incluirLaudo: document.getElementById('incluirLaudo')?.checked ?? true
             },
             lancamentos: lancamentos,
             outrosValores: outrosValores,
@@ -2869,6 +2935,9 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
                         alterarFonte();
                     }
                     document.getElementById('chkSucumbenciaIncluiGuia5').checked = j.meta.chkSucumbenciaIncluiGuia5 || false;
+                    if (j.meta.incluirLaudo !== undefined && document.getElementById('incluirLaudo')) {
+                        document.getElementById('incluirLaudo').checked = !!j.meta.incluirLaudo;
+                    }
                 }
                 lancamentos = j.lancamentos || [];
                 outrosValores = j.outrosValores || [];
@@ -2995,6 +3064,7 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
         document.getElementById('tituloOutros').value = 'OUTROS VALORES (Lançamentos Individuais)';
         document.getElementById('subtituloOutros').value = 'SALDO TOTAL DOS OUTROS VALORES';
         document.getElementById('textoLivre').value = '';
+        if (document.getElementById('incluirLaudo')) document.getElementById('incluirLaudo').checked = true;
         document.getElementById('fontSizeSelect').value = '12';
         alterarFonte();
         
