@@ -297,9 +297,25 @@
         #infoMajoracao { white-space: pre-wrap; }
         #sucumbenciaDetalhesExtra .card-row.sub { font-size: 0.9em; }
     </style>
+<style id="computum-auth-v1">
+.auth-gate{position:fixed;inset:0;z-index:99999;background:rgba(244,247,249,.98);display:flex;align-items:center;justify-content:center;padding:20px}.auth-card{width:min(420px,100%);background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:0 18px 60px #1232}.auth-brand{margin-bottom:20px}.auth-brand h2{margin:0 0 6px;font-size:24px;color:var(--primary)}.auth-brand p{margin:0;color:var(--muted);line-height:1.45}.auth-form{display:grid;gap:12px}.auth-form label{margin:0}.auth-actions{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:4px}.auth-error{display:none;padding:10px 12px;border-radius:9px;background:#fff0f0;border:1px solid #efcaca;color:#8f3b3b;font-size:13px}.auth-error.show{display:block}.auth-status{font-size:12px;color:var(--muted);min-height:18px}.auth-userbar{position:fixed;right:18px;bottom:18px;z-index:9998;display:none;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 9px 7px 12px;box-shadow:0 5px 20px #1232;font-size:12px}.auth-userbar.show{display:flex}.auth-userbar .email{max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)}.auth-userbar button{padding:6px 9px;font-size:11px}@media print{.auth-gate,.auth-userbar{display:none!important}}
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
+<div id="authGate" class="auth-gate">
+  <div class="auth-card">
+    <div class="auth-brand"><h2>Computum</h2><p>Sistema Judicial de Cálculos — Diferenças</p></div>
+    <form id="authForm" class="auth-form" autocomplete="on">
+      <div><label for="authEmail">E-mail</label><input id="authEmail" name="email" type="email" autocomplete="username" required></div>
+      <div><label for="authPassword">Senha</label><input id="authPassword" name="password" type="password" autocomplete="current-password" required></div>
+      <div id="authError" class="auth-error"></div>
+      <div class="auth-actions"><button type="submit" id="authLogin" class="primary">Entrar</button><button type="button" id="authReset">Esqueci a senha</button></div>
+      <div id="authStatus" class="auth-status"></div>
+    </form>
+  </div>
+</div>
+<div id="authUserbar" class="auth-userbar"><span class="email" id="authUserEmail"></span><button type="button" id="authLogout">Sair</button></div>
 <div class="container no-print" id="appContainer">
     <div class="top-bar">
         <a href="https://sicom.cjf.jus.br/tabelaCorMor.php" target="_blank" class="btn btn-link">🔗 SICOM CJF</a>
@@ -2651,6 +2667,22 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
         atualizarSaldoGuia5Exibido();
         atualizarRotulos();
     }
+</script>
+<script>
+/* COMPUTUM AUTH — mesma camada de autenticação usada no módulo de Saúde. O motor de cálculos permanece intacto. */
+(function(){
+ const SUPABASE_URL='https://tdcexflyomkpygtxynjb.supabase.co';
+ const SUPABASE_PUBLISHABLE_KEY='sb_publishable_dqM-ROG8Pc7OwW6F-Swcpw_-DMNn19R';
+ const authClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+ const gate=document.getElementById('authGate'),form=document.getElementById('authForm'),email=document.getElementById('authEmail'),password=document.getElementById('authPassword'),error=document.getElementById('authError'),status=document.getElementById('authStatus'),login=document.getElementById('authLogin'),reset=document.getElementById('authReset'),userbar=document.getElementById('authUserbar'),userEmail=document.getElementById('authUserEmail'),logout=document.getElementById('authLogout');
+ function showError(m){error.textContent=m||'Não foi possível concluir a operação.';error.classList.add('show')}; function clearError(){error.textContent='';error.classList.remove('show')}; function setBusy(b){login.disabled=b;reset.disabled=b;login.textContent=b?'Entrando…':'Entrar'}
+ function showApp(session){gate.style.display='none';if(session&&session.user){userEmail.textContent=session.user.email||'';userbar.classList.add('show')}} function showGate(){gate.style.display='flex';userbar.classList.remove('show')}
+ form.addEventListener('submit',async function(ev){ev.preventDefault();clearError();status.textContent='';setBusy(true);const {data,error:err}=await authClient.auth.signInWithPassword({email:email.value.trim(),password:password.value});if(err){showError(err.message==='Invalid login credentials'?'E-mail ou senha inválidos.':err.message);setBusy(false);return}password.value='';status.textContent='Acesso autorizado.';setBusy(false);showApp(data.session)});
+ reset.addEventListener('click',async function(){clearError();const address=email.value.trim();if(!address){showError('Informe seu e-mail para receber o link de recuperação.');email.focus();return}reset.disabled=true;status.textContent='Enviando link de recuperação…';const {error:err}=await authClient.auth.resetPasswordForEmail(address,{redirectTo:window.location.origin+'/#reset-password'});reset.disabled=false;if(err){showError(err.message);status.textContent='';return}status.textContent='Se o e-mail estiver cadastrado, o link de recuperação será enviado.'});
+ logout.addEventListener('click',async function(){await authClient.auth.signOut();email.value='';password.value='';status.textContent='';clearError();showGate()});
+ authClient.auth.onAuthStateChange(function(event,session){if(session)showApp(session);else showGate()});
+ authClient.auth.getSession().then(function(result){if(result.error){showError('Não foi possível verificar a sessão. Recarregue a página.');return}if(result.data.session)showApp(result.data.session);else showGate()});
+})();
 </script>
 </body>
 </html>
