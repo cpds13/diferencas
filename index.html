@@ -297,76 +297,35 @@
         #infoMajoracao { white-space: pre-wrap; }
         #sucumbenciaDetalhesExtra .card-row.sub { font-size: 0.9em; }
     </style>
-<style id="computum-auth-v2">
-/* COMPUTUM AUTH — visual refinements; calculator engine untouched */
-.auth-gate{
-  position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;
-  padding:24px;background:rgba(241,245,248,.82);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)
-}
-.auth-card{
-  width:min(430px,100%);background:#fff;border:1px solid rgba(26,52,73,.10);border-radius:22px;
-  padding:36px 38px 32px;box-shadow:0 24px 70px rgba(19,42,58,.18),0 4px 14px rgba(19,42,58,.06)
-}
-.auth-brand{margin-bottom:28px;text-align:left}
-.auth-brand h2{
-  display:flex;align-items:center;gap:11px;margin:0 0 9px;font-family:Georgia,'Times New Roman',serif;
-  font-size:28px;font-weight:700;letter-spacing:-.4px;color:#b15f3e
-}
-.auth-brand h2::before{
-  content:'C';display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
-  border-radius:10px;background:#17384d;color:#fff;font-family:Georgia,serif;font-size:21px;font-weight:700;
-  box-shadow:0 5px 14px rgba(23,56,77,.18)
-}
-.auth-brand p{margin:0;padding-left:45px;color:#647482;line-height:1.45;font-size:13px}
-.auth-form{display:grid;gap:16px}
-.auth-form>div:not(.auth-error):not(.auth-actions):not(.auth-status){display:grid;gap:7px}
-.auth-form label{margin:0;color:#314b5d;font-size:12px;font-weight:650;letter-spacing:.15px}
-.auth-form input{
-  width:100%;box-sizing:border-box;padding:12px 13px;border:1px solid #d6dee4;border-radius:10px;
-  background:#fbfcfd;color:#1d3445;font-size:14px;outline:none;transition:border-color .18s,box-shadow .18s,background .18s
-}
-.auth-form input:focus{border-color:#6b9bb4;background:#fff;box-shadow:0 0 0 3px rgba(76,132,160,.13)}
-.auth-form input::placeholder{color:#9aa8b1}
-.auth-actions{display:grid;grid-template-columns:1fr;gap:10px;margin-top:2px}
-.auth-actions button{min-height:42px;border-radius:10px;font-size:13px;font-weight:650;cursor:pointer}
-.auth-actions .primary{
-  width:100%;border:1px solid #17384d;background:#17384d;color:#fff;
-  box-shadow:0 6px 16px rgba(23,56,77,.16);transition:transform .15s,background .15s,box-shadow .15s
-}
-.auth-actions .primary:hover{background:#214b64;box-shadow:0 8px 20px rgba(23,56,77,.22)}
-.auth-actions .primary:active{transform:translateY(1px)}
-.auth-actions button:not(.primary){border:0;background:transparent;color:#527186;font-weight:600}
-.auth-actions button:not(.primary):hover{color:#17384d;text-decoration:underline}
-.auth-error{display:none;padding:10px 12px;border-radius:9px;background:#fff5f3;border:1px solid #efcfca;color:#8d4638;font-size:12px;line-height:1.4}
-.auth-error.show{display:block}
-.auth-status{font-size:11.5px;color:#70808b;min-height:17px;text-align:center;line-height:1.4}
-.auth-userbar{
-  position:fixed;right:18px;top:18px;bottom:auto;z-index:9998;display:none;align-items:center;gap:8px;
-  background:rgba(255,255,255,.96);border:1px solid rgba(26,52,73,.12);border-radius:999px;
-  padding:6px 7px 6px 12px;box-shadow:0 6px 22px rgba(19,42,58,.12);font-size:12px
-}
-.auth-userbar.show{display:flex}.auth-userbar .email{max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#647482}
-.auth-userbar button{padding:6px 10px;border:1px solid #d8e0e5;border-radius:999px;background:#fff;color:#345268;font-size:11px;cursor:pointer}
-.auth-userbar button:hover{background:#f3f6f8}
-@media(max-width:520px){.auth-card{padding:30px 24px 26px;border-radius:18px}.auth-brand h2{font-size:25px}.auth-brand p{padding-left:45px}.auth-userbar .email{max-width:145px}}
-@media print{.auth-gate,.auth-userbar{display:none!important}}
-</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style id="computum-auth-style">
+#computumAuthOverlay{position:fixed;inset:0;z-index:999999;background:linear-gradient(135deg,#f7f4ef 0%,#eee7df 100%);display:flex;align-items:center;justify-content:center;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+#computumAuthOverlay[hidden]{display:none!important}
+.ca-card{width:min(430px,calc(100% - 32px));background:#fff;border:1px solid #e4ddd5;border-radius:20px;padding:34px;box-shadow:0 20px 60px rgba(60,40,25,.12)}
+.ca-brand{font-weight:800;letter-spacing:.08em;color:#9b583f;font-size:13px;text-transform:uppercase}.ca-title{font-size:28px;margin:10px 0 7px;color:#292522}.ca-sub{color:#746c65;font-size:14px;line-height:1.5;margin-bottom:24px}.ca-field{display:block;margin:14px 0}.ca-field span{display:block;font-size:12px;font-weight:700;color:#514a44;margin-bottom:7px}.ca-field input{width:100%;box-sizing:border-box;border:1px solid #d9d0c8;border-radius:10px;padding:12px 13px;font-size:15px;outline:none}.ca-field input:focus{border-color:#a85f43;box-shadow:0 0 0 3px rgba(168,95,67,.12)}.ca-btn{width:100%;border:0;border-radius:10px;padding:13px;background:#a85f43;color:white;font-weight:700;cursor:pointer;margin-top:8px}.ca-link{border:0;background:none;color:#9b583f;cursor:pointer;padding:10px 0;font-size:13px}.ca-msg{min-height:20px;font-size:13px;margin-top:10px;color:#9b583f}.computum-userbar{position:fixed;top:10px;right:12px;z-index:99998;background:rgba(255,255,255,.94);border:1px solid #ddd4cc;border-radius:999px;padding:6px 8px 6px 12px;display:flex;align-items:center;gap:9px;box-shadow:0 5px 18px rgba(0,0,0,.08);font:13px system-ui}.computum-userbar button{border:0;background:#f1ebe5;color:#8e503b;border-radius:999px;padding:6px 10px;cursor:pointer}.computum-auth-recovery{display:none}.computum-auth-recovery.active{display:block}
+@media print{#computumAuthOverlay,.computum-userbar{display:none!important}}
+</style>
 </head>
 <body>
-
-<div id="authGate" class="auth-gate">
-  <div class="auth-card">
-    <div class="auth-brand"><h2>Computum</h2><p>Sistema Judicial de Cálculos — Diferenças</p></div>
-    <form id="authForm" class="auth-form" autocomplete="on">
-      <div><label for="authEmail">E-mail</label><input id="authEmail" name="email" type="email" autocomplete="username" required></div>
-      <div><label for="authPassword">Senha</label><input id="authPassword" name="password" type="password" autocomplete="current-password" required></div>
-      <div id="authError" class="auth-error"></div>
-      <div class="auth-actions"><button type="submit" id="authLogin" class="primary">Entrar</button><button type="button" id="authReset">Esqueci a senha</button></div>
-      <div id="authStatus" class="auth-status"></div>
+<div id="computumAuthOverlay" aria-modal="true" role="dialog">
+  <div class="ca-card">
+    <div class="ca-brand">COMPUTUM</div>
+    <h2 id="caTitle" class="ca-title">Acesso restrito</h2>
+    <p id="caSub" class="ca-sub">Entre com seu e-mail e senha para acessar o cálculo de Abono de Permanência.</p>
+    <form id="caForm" autocomplete="on">
+      <label class="ca-field"><span>E-mail</span><input id="caEmail" type="email" autocomplete="username" required></label>
+      <label class="ca-field"><span>Senha</span><input id="caPassword" type="password" autocomplete="current-password" required></label>
+      <button class="ca-btn" type="submit">Entrar</button>
+      <button id="caForgot" class="ca-link" type="button">Esqueci minha senha</button>
+      <div id="caMsg" class="ca-msg" aria-live="polite"></div>
     </form>
   </div>
 </div>
-<div id="authUserbar" class="auth-userbar"><span class="email" id="authUserEmail"></span><button type="button" id="authLogout">Sair</button></div>
+<div id="computumUserbar" class="computum-userbar" style="display:none">
+  <span id="computumUserEmail"></span>
+  <button id="computumLogout" type="button">Sair</button>
+</div>
+
 <div class="container no-print" id="appContainer">
     <div class="top-bar">
         <a href="https://sicom.cjf.jus.br/tabelaCorMor.php" target="_blank" class="btn btn-link">🔗 SICOM CJF</a>
@@ -2719,20 +2678,21 @@ A atualização monetária foi realizada de acordo com a Tabela ENCOGE para déb
         atualizarRotulos();
     }
 </script>
-<script>
-/* COMPUTUM AUTH — mesma camada de autenticação usada no módulo de Saúde. O motor de cálculos permanece intacto. */
+
+<script id="computum-auth-script">
 (function(){
  const SUPABASE_URL='https://tdcexflyomkpygtxynjb.supabase.co';
  const SUPABASE_PUBLISHABLE_KEY='sb_publishable_dqM-ROG8Pc7OwW6F-Swcpw_-DMNn19R';
- const authClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
- const gate=document.getElementById('authGate'),form=document.getElementById('authForm'),email=document.getElementById('authEmail'),password=document.getElementById('authPassword'),error=document.getElementById('authError'),status=document.getElementById('authStatus'),login=document.getElementById('authLogin'),reset=document.getElementById('authReset'),userbar=document.getElementById('authUserbar'),userEmail=document.getElementById('authUserEmail'),logout=document.getElementById('authLogout');
- function showError(m){error.textContent=m||'Não foi possível concluir a operação.';error.classList.add('show')}; function clearError(){error.textContent='';error.classList.remove('show')}; function setBusy(b){login.disabled=b;reset.disabled=b;login.textContent=b?'Entrando…':'Entrar'}
- function showApp(session){gate.style.display='none';if(session&&session.user){userEmail.textContent=session.user.email||'';userbar.classList.add('show')}} function showGate(){gate.style.display='flex';userbar.classList.remove('show')}
- form.addEventListener('submit',async function(ev){ev.preventDefault();clearError();status.textContent='';setBusy(true);const {data,error:err}=await authClient.auth.signInWithPassword({email:email.value.trim(),password:password.value});if(err){showError(err.message==='Invalid login credentials'?'E-mail ou senha inválidos.':err.message);setBusy(false);return}password.value='';status.textContent='Acesso autorizado.';setBusy(false);showApp(data.session)});
- reset.addEventListener('click',async function(){clearError();const address=email.value.trim();if(!address){showError('Informe seu e-mail para receber o link de recuperação.');email.focus();return}reset.disabled=true;status.textContent='Enviando link de recuperação…';const {error:err}=await authClient.auth.resetPasswordForEmail(address,{redirectTo:window.location.origin+'/#reset-password'});reset.disabled=false;if(err){showError(err.message);status.textContent='';return}status.textContent='Se o e-mail estiver cadastrado, o link de recuperação será enviado.'});
- logout.addEventListener('click',async function(){await authClient.auth.signOut();email.value='';password.value='';status.textContent='';clearError();showGate()});
- authClient.auth.onAuthStateChange(function(event,session){if(session)showApp(session);else showGate()});
- authClient.auth.getSession().then(function(result){if(result.error){showError('Não foi possível verificar a sessão. Recarregue a página.');return}if(result.data.session)showApp(result.data.session);else showGate()});
+ const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+ const overlay=document.getElementById('computumAuthOverlay'), form=document.getElementById('caForm'), email=document.getElementById('caEmail'), pass=document.getElementById('caPassword'), msg=document.getElementById('caMsg'), forgot=document.getElementById('caForgot'), bar=document.getElementById('computumUserbar'), userEmail=document.getElementById('computumUserEmail'), title=document.getElementById('caTitle'), sub=document.getElementById('caSub');
+ function showMsg(t){msg.textContent=t;}
+ function showUser(user){overlay.hidden=true;bar.style.display='flex';userEmail.textContent=user?.email||'';}
+ function showLogin(){overlay.hidden=false;bar.style.display='none';title.textContent='Acesso restrito';sub.textContent='Entre com seu e-mail e senha para acessar o cálculo de Abono de Permanência.';pass.value='';}
+ form.addEventListener('submit',async e=>{e.preventDefault();showMsg('Entrando...');const {error}=await client.auth.signInWithPassword({email:email.value.trim(),password:pass.value});if(error){showMsg('Não foi possível entrar: '+error.message);return;}showMsg('');});
+ forgot.addEventListener('click',async()=>{if(!email.value.trim()){showMsg('Informe seu e-mail primeiro.');return;}showMsg('Enviando instruções...');const {error}=await client.auth.resetPasswordForEmail(email.value.trim(),{redirectTo:location.origin+location.pathname});showMsg(error?'Não foi possível enviar: '+error.message:'Verifique seu e-mail para redefinir a senha.');});
+ document.getElementById('computumLogout').addEventListener('click',async()=>{await client.auth.signOut();showLogin();});
+ client.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){overlay.hidden=false;bar.style.display='none';title.textContent='Redefinir senha';sub.textContent='Defina uma nova senha para sua conta.';form.innerHTML='<label class="ca-field"><span>Nova senha</span><input id="caNewPassword" type="password" minlength="6" required></label><button class="ca-btn" type="submit">Salvar nova senha</button>';form.onsubmit=async e=>{e.preventDefault();const p=document.getElementById('caNewPassword').value;const {error}=await client.auth.updateUser({password:p});showMsg(error?'Não foi possível alterar: '+error.message:'Senha alterada.');if(!error)setTimeout(()=>location.reload(),700);};} else if(session){showUser(session.user);} else {showLogin();}});
+ client.auth.getSession().then(({data})=>{if(data.session)showUser(data.session.user);else showLogin();});
 })();
 </script>
 </body>
